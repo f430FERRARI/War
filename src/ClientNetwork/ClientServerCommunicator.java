@@ -21,6 +21,7 @@ public class ClientServerCommunicator {
         this.name = name;
     }
 
+
     /**
      * This method starts communication between the client and the server. It then creates a seperate thread that always
      * listens for incoming messages from the server.

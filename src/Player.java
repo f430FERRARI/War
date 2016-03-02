@@ -1,28 +1,38 @@
-/**
- * Created by mlee43 on 2016-02-28.
- */
+import java.util.ArrayList;
+
 public class Player {
 
-    private String name;
-    private String id;
+	private int id; 
+	private String name;  
+	private int score;  
+	private ArrayList<Integer> cards;
+	
+	public Player(String name) { 
+		this.name = name;
+	}
+	
+	public int getId() {
+		return id;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public String getId() {
-        return id;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setId(String id) {
-        this.id = id;
-    }
+	public int getScore() {
+		return score;
+	}
 
-    public Player(String name) {
-        this.name = name;
-    }
+	public void setScore(int score) {
+		this.score = score;
+	} 
+	
 }

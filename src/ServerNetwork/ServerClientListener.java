@@ -15,7 +15,14 @@ public class ServerClientListener implements Callable {
     private byte[] message = new byte[1024];  // TODO: May be too big
     private boolean isConnected = false;
 
-    public ServerClientListener(int id, Socket clientSocket) {
+    private ListenerListener listener;
+
+    public interface ListenerListener {
+        void onReceiveMessage(byte[] message);
+    }
+
+    public ServerClientListener(ServerNetworkManager manager, int id, Socket clientSocket) {
+        this.listener = manager;
         this.id = id;
         this.clientSocket = clientSocket;
         this.isConnected = true;
@@ -44,7 +51,7 @@ public class ServerClientListener implements Callable {
             int length = dataInputStream.readInt();                    // read length of incoming message
             if (length > 0) {
                 dataInputStream.readFully(message, 0, message.length); // read the message
-                ServerMessageHandler.handleMessage(message);
+                listener.onReceiveMessage(message);
             }
         }
         return -1;

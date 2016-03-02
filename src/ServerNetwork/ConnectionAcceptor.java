@@ -18,7 +18,7 @@ public class ConnectionAcceptor implements Callable {
         void connect(int id, Socket newSocket);
     }
 
-    public ConnectionAcceptor(ServerConnectionManager manager) {
+    public ConnectionAcceptor(ServerNetworkManager manager) {
         mListener = manager;
     }
 

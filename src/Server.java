@@ -1,18 +1,20 @@
-import ServerNetwork.ServerConnectionManager;
+import ServerNetwork.ServerMessageHandler;
+import ServerNetwork.ServerNetworkManager;
 
-/**
- * Created by mlee43 on 2016-02-27.
- */
-public class Server {
+public class Server implements ServerMessageHandler.AdminMessageListener {
 
-    public static void main(String[] args) {
 
-        Player mike = new Player("Mike");
-        ServerConnectionManager comms = new ServerConnectionManager();
-        comms.startServerNetwork();
+	public void main(String[] args) { // TODO: make a main class
+		ServerNetworkManager networkManager = ServerNetworkManager.getInstance();
+        networkManager.startServerNetwork();
+        networkManager.getServerMessageHandler().register(ServerMessageHandler.LISTENER_ADMIN, this);
+	}
 
-        byte[] nameRequest = {0x3, 0x0, 0x0};
-        comms.send(1, nameRequest);
+	public void onStartNewGame() {
+		
+	}
+
+    public void onReceivePlayerInfo(int id, String name, String password) {
+
     }
-
 }
