@@ -1,4 +1,4 @@
-package ServerNetwork;
+package Server.ServerNetwork;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -33,6 +33,7 @@ public class ConnectionAcceptor implements Callable {
         ServerSocket serverSocket = null;
         try {
             serverSocket = new ServerSocket(2000);
+
             while (acceptMore) {
                 Socket clientSocket = serverSocket.accept();
                 mListener.connect(nextId++, clientSocket);
@@ -47,6 +48,6 @@ public class ConnectionAcceptor implements Callable {
             }
         }
 
-        return 1;
+        return -1;
     }
 }

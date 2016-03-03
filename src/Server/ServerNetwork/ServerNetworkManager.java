@@ -1,16 +1,17 @@
-package ServerNetwork;
+package Server.ServerNetwork;
 
+import java.io.DataOutputStream;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * Created by mlee43 on 2016-02-28.
- */
-public class ServerNetworkManager implements ConnectionAcceptor.ConnectionListener, ServerClientListener.ListenerListener {
+public class ServerNetworkManager extends ServerMessageHandler implements ConnectionAcceptor.ConnectionListener {
 
-    private ServerMessageHandler handler;
+    public static final byte LOGIN_REQUEST_INFO = 0x0;
+    public static final byte LOGIN_RECEIVE_INFO = 0x1;
+
     private HashMap<Integer, Socket> playerConnections = new HashMap<>();
     private ExecutorService executorService = Executors.newCachedThreadPool(); // TODO: Might not work like this
 
@@ -33,15 +34,13 @@ public class ServerNetworkManager implements ConnectionAcceptor.ConnectionListen
     }
 
     public void resetServerNetwork() {
-
-        handler = new ServerMessageHandler();
         playerConnections.clear();
         // TODO: Restart threads
     }
 
     public void startServerNetwork() {
+        resetServerNetwork();
         executorService.submit(new ConnectionAcceptor(this));
-        System.out.println("startServerNetwork. Got here!");
     }
 
     public void shutdownNetwork() {
@@ -56,21 +55,25 @@ public class ServerNetworkManager implements ConnectionAcceptor.ConnectionListen
      * @param message The message the player wants to send
      */
     public void send(int id, byte[] message) {
-
         Socket destinationSocket = null;
         if (!playerConnections.containsKey(id)) {
             destinationSocket = playerConnections.get(id);
         } else {
             System.out.println("ID does not exist!");
+            return;
         }
 
-        executorService.submit(new ServerMessageSender(message, id, destinationSocket));
-        System.out.println("send. Got here!");
-    }
-
-    @Override
-    public void onReceiveMessage(byte[] message) {
-        handler.handleMessage(message);
+        final Socket finalDestinationSocket = destinationSocket;
+        executorService.submit(new Callable() {
+            @Override
+            public Object call() throws Exception {
+                DataOutputStream dataOutputStream = new DataOutputStream(finalDestinationSocket.getOutputStream());
+                dataOutputStream.writeInt(message.length); // write length of the message
+                dataOutputStream.write(message);
+                dataOutputStream.close();
+                return -1;
+            }
+        });
     }
 
     public void connect(int id, Socket newSocket) {
@@ -78,16 +81,16 @@ public class ServerNetworkManager implements ConnectionAcceptor.ConnectionListen
         playerConnections.put(id, newSocket);
 
         // Start listening to the new client
-        executorService.submit(new ServerClientListener(this, id, newSocket));
-        System.out.println("send. Got here!");
+        executorService.submit(new ServerClientListener(this, newSocket));
+        System.out.println("HEERRREESSS JOHHNNNYY!");
+        // TODO: Request name and create the player
+//        byte[] requestName = {0x1, LOGIN_RECEIVE_INFO};
+//        send(id, requestName);
+//        adminMessageListener.onReceivePlayerInfo(id, );
     }
 
     public void disconnect(int id) {
         playerConnections.remove(id);
         // TODO: Turn off listening thread
-    }
-
-    public ServerMessageHandler getServerMessageHandler() {
-        return handler;
     }
 }

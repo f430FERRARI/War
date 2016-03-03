@@ -1,16 +1,18 @@
-import ServerNetwork.ServerMessageHandler;
-import ServerNetwork.ServerNetworkManager;
+package Server;
+
+import Server.ServerNetwork.ServerMessageHandler;
+import Server.ServerNetwork.ServerNetworkManager;
 
 import java.util.ArrayList;
 
-public class ServerGame implements ServerMessageHandler.GameMessageListener {
+public class ServerGameManager implements ServerMessageHandler.GameMessageListener {
 	
 	private ArrayList<Player> players;
 	private int[] cards;  
 	
-	public ServerGame(ArrayList<Player> players) { 
+	public ServerGameManager(ArrayList<Player> players) {
 		this.players = players;
-        ServerNetworkManager.getInstance().getServerMessageHandler().register(ServerMessageHandler.LISTENER_GAME, this);
+        ServerNetworkManager.getInstance().register(ServerMessageHandler.LISTENER_GAME, this);
 	}
 	
 	/** 

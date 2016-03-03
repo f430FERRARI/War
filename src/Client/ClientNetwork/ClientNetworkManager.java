@@ -1,4 +1,4 @@
-package ClientNetwork;
+package Client.ClientNetwork;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -9,36 +9,46 @@ import java.util.concurrent.Executors;
 /**
  * Created by mlee43 on 2016-02-27.
  */
-public class ClientServerCommunicator {
+public class ClientNetworkManager extends ClientMessageHandler {
 
     private boolean connected = false;
-    private String name;  //TODO: Get name from prompt
-    private int id;     // TODO: Retrieve ID
-
     Socket clientSocket = null;
 
-    public ClientServerCommunicator(String name) {
-        this.name = name;
+    private static ClientNetworkManager clientNetworkManager = null;
+
+    public static ClientNetworkManager getInstance() {
+        if (clientNetworkManager == null) {
+            clientNetworkManager = new ClientNetworkManager();
+        }
+        return clientNetworkManager;
     }
 
+    public void resetClientNetwork() {
+        connected = false;
+        clientSocket = null;
+    }
+
+    public void shutdownClientNetwork() {
+        // TODO: Close threads
+    }
 
     /**
      * This method starts communication between the client and the server. It then creates a seperate thread that always
      * listens for incoming messages from the server.
      */
-    public void startServerConnection() {
+    public void startServerConnection(int port) { // TODO: Port for testing
+        resetClientNetwork();
 
         // Create a new ongoing listener
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         try {
-            Socket clientSocket = new Socket("127.0.0.1", 2000); // TODO: Update these
-            executorService.submit(new ClientListener(clientSocket));
+            Socket clientSocket = new Socket("127.0.0.1", port); // TODO: Update these
+            executorService.submit(new ClientServerListener(this, clientSocket));
         } catch (Exception exp) {
             exp.printStackTrace();
         } finally {
             executorService.shutdownNow();
         }
-
     }
 
     public void send(byte[] message) throws IOException {

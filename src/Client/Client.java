@@ -1,0 +1,31 @@
+package Client;
+
+import Client.ClientNetwork.ClientMessageHandler;
+import Client.ClientNetwork.ClientNetworkManager;
+
+import java.util.ArrayList;
+
+/**
+ * Created by mlee43 on 2016-02-27.
+ */
+public class Client implements ClientNetworkManager.AdminMessageListener {
+
+    private ArrayList<Player> playerList;
+    private ClientNetworkManager networkManager;
+
+    public Client() {
+        playerList = new ArrayList<>();
+    }
+
+    public void startClient(int port) {
+        // Start client and register this class as a listener
+        networkManager = ClientNetworkManager.getInstance();
+        networkManager.register(ClientMessageHandler.LISTENER_ADMIN, this);
+        networkManager.startServerConnection(port);
+    }
+
+    public static void main(String[] args) {
+        Client client = new Client();
+        client.startClient(Integer.parseInt(args[0]));
+    }
+}

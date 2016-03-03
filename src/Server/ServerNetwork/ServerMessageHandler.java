@@ -1,4 +1,4 @@
-package ServerNetwork;
+package Server.ServerNetwork;
 
 
 /**
@@ -11,10 +11,10 @@ public class ServerMessageHandler {
     public static final int LISTENER_CHAT = 3;
     public static final int LISTENER_LOBBY = 4;
 
-    private GameMessageListener gameMessageListener;
-    private AdminMessageListener adminMessageListener;
-    private ChatMessageListener chatMessageListener;
-    private LobbyMessageListener lobbyMessageListener;
+    protected GameMessageListener gameMessageListener;
+    protected AdminMessageListener adminMessageListener;
+    protected ChatMessageListener chatMessageListener;
+    protected LobbyMessageListener lobbyMessageListener;
 
     public interface GameMessageListener {
         void onReceiveDraw();
@@ -23,7 +23,7 @@ public class ServerMessageHandler {
     }
 
     public interface AdminMessageListener {
-        void onReceivePlayerInfo(int id, String name, String password);
+        void onReceivePlayerInfo(int id, String name); // TODO: Get password from this eventually
     }
 
     public interface ChatMessageListener {

@@ -1,9 +1,10 @@
+package Client;
 
-public class ClientGame {
+public class ClientGameLogic {
 
 	Player me;
 	
-	public ClientGame(Player player) {
+	public ClientGameLogic(Player player) {
 		this.me = player;
 	} 
 	
