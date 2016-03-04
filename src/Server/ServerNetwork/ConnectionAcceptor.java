@@ -27,6 +27,12 @@ public class ConnectionAcceptor implements Callable {
         return receiveConnection();
     }
 
+    /**
+     * This method listens for incoming TCP connections while the network is accepting more connections. It triggers
+     * a connect event when a new player joins.
+     *
+     * @return This returns -1 when the connection acceptor stops listening.
+     */
     public int receiveConnection() {
 
         int nextId = 1;

@@ -24,6 +24,16 @@ public class Client implements ClientNetworkManager.AdminMessageListener {
         networkManager.startServerConnection(port);
     }
 
+    @Override
+    public void onRequestInfo() {
+
+    }
+
+    @Override
+    public void onSuccessfulJoin() {
+
+    }
+
     public static void main(String[] args) {
         Client client = new Client();
         client.startClient(Integer.parseInt(args[0]));

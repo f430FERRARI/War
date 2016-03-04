@@ -1,6 +1,6 @@
 package Client.ClientNetwork;
 
-import java.io.DataOutputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
@@ -23,11 +23,17 @@ public class ClientNetworkManager extends ClientMessageHandler {
         return clientNetworkManager;
     }
 
+    /**
+     * Resets state of the client network.
+     */
     public void resetClientNetwork() {
         connected = false;
         clientSocket = null;
     }
 
+    /**
+     * Shuts down the network by closing all network related threads.
+     */
     public void shutdownClientNetwork() {
         // TODO: Close threads
     }
@@ -51,10 +57,16 @@ public class ClientNetworkManager extends ClientMessageHandler {
         }
     }
 
+    /**
+     * This method sends a message to the server.
+     *
+     * @param message The byte array message.
+     * @throws IOException
+     */
     public void send(byte[] message) throws IOException {
-        DataOutputStream dataOutputStream = new DataOutputStream(clientSocket.getOutputStream());
-        dataOutputStream.writeInt(message.length); // write length of the message
-        dataOutputStream.write(message);
+        BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(clientSocket.getOutputStream());
+        bufferedOutputStream.write(message);
+        bufferedOutputStream.flush();
     }
 
     public boolean getConnected(){

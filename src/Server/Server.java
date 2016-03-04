@@ -21,9 +21,9 @@ public class Server implements ServerNetworkManager.AdminMessageListener {
         networkManager.startServerNetwork();
     }
 
-	public void onStartNewGame() {
-		
-	}
+    @Override
+    public void onDisconnect(int id) {
+    }
 
     @Override
     public void onReceivePlayerInfo(int id, String name) {

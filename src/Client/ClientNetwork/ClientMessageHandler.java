@@ -16,25 +16,53 @@ public class ClientMessageHandler {
     private LobbyMessageListener lobbyMessageListener;
 
     public interface GameMessageListener {
-
+        void onBeginGame();
+        void onBeginRound();
+        void onRoundEnd();
+        void onReceiveScores();
+        void onGameFinished();
     }
 
     public interface AdminMessageListener {
-
+        void onRequestInfo();
+        void onSuccessfulJoin();
     }
 
     public interface ChatMessageListener {
-        void onReceiveMessage(int id, String text);
+        void onClientReceiveMessage(int id, String text);
+        void onSuccessfulChatroomEntry();
+        void onCSuccessfulChatroomExit();
     }
 
     public interface LobbyMessageListener {
-
+        void onSuccessfulLobbyEntry();
+        void onSuccessfulLobbyExit();
+        void onSuccessfulLobbyCreate();
     }
 
+    /**
+     * This method handles all messages by delegating the task to the appropriate class.
+     *
+     * @param message The message received over the network.
+     */
     public void handleMessage(byte[] message) {
+        switch (message[1]) {
 
+            case 0x0:
+                break;
+            case 0x1:
+                break;
+            case 0x2:
+                break;
+        }
     }
 
+    /**
+     * This method is used to register an object as a listener to one of the following interfaces.
+     *
+     * @param kind The kind of events the listener wants to hear.
+     * @param listener A reference to the object that is going to listen.
+     */
     public void register(int kind, Object listener) {
         switch (kind) {
             case 1:

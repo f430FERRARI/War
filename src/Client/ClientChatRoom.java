@@ -9,9 +9,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * Created by mlee43 on 2016-03-02.
- */
 public class ClientChatRoom implements ClientNetworkManager.ChatMessageListener {
 
     public static final byte CHAT_SEND_MSG = 0x0;
@@ -64,8 +61,18 @@ public class ClientChatRoom implements ClientNetworkManager.ChatMessageListener 
     }
 
     @Override
-    public void onReceiveMessage(int id, String text) {
-        System.out.println("\n" + id + ": " + text);
+    public void onClientReceiveMessage(int id, String text) {
+
+    }
+
+    @Override
+    public void onSuccessfulChatroomEntry() {
+
+    }
+
+    @Override
+    public void onCSuccessfulChatroomExit() {
+
     }
 
     public void setInChat(boolean inChat) {

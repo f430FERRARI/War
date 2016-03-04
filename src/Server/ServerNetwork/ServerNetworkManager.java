@@ -1,6 +1,6 @@
 package Server.ServerNetwork;
 
-import java.io.DataOutputStream;
+import java.io.BufferedOutputStream;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.concurrent.Callable;
@@ -33,16 +33,25 @@ public class ServerNetworkManager extends ServerMessageHandler implements Connec
         return serverNetworkManager;
     }
 
+    /**
+     * Resets state of the server network.
+     */
     public void resetServerNetwork() {
         playerConnections.clear();
         // TODO: Restart threads
     }
 
+    /**
+     * Starts the server network by resetting its state and starting the connection acceptor.
+     */
     public void startServerNetwork() {
         resetServerNetwork();
         executorService.submit(new ConnectionAcceptor(this));
     }
 
+    /**
+     * Shuts down the network by closing all network related threads.
+     */
     public void shutdownNetwork() {
         // TODO: Shutdown threads
     }
@@ -67,15 +76,21 @@ public class ServerNetworkManager extends ServerMessageHandler implements Connec
         executorService.submit(new Callable() {
             @Override
             public Object call() throws Exception {
-                DataOutputStream dataOutputStream = new DataOutputStream(finalDestinationSocket.getOutputStream());
-                dataOutputStream.writeInt(message.length); // write length of the message
-                dataOutputStream.write(message);
-                dataOutputStream.close();
+                BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(finalDestinationSocket.getOutputStream());
+                bufferedOutputStream.write(message);
+                bufferedOutputStream.flush();
                 return -1;
             }
         });
     }
 
+    /**
+     * Callback method to ConnectionAcceptor. Completes the connection by adding the new client to the connection list,
+     * opening the client listener and requesting the player's info.
+     *
+     * @param id The player's newly assigned id.
+     * @param newSocket The player's associated socket info.
+     */
     public void connect(int id, Socket newSocket) {
         // Add player to connection list
         playerConnections.put(id, newSocket);
@@ -84,9 +99,6 @@ public class ServerNetworkManager extends ServerMessageHandler implements Connec
         executorService.submit(new ServerClientListener(this, newSocket));
         System.out.println("HEERRREESSS JOHHNNNYY!");
         // TODO: Request name and create the player
-//        byte[] requestName = {0x1, LOGIN_RECEIVE_INFO};
-//        send(id, requestName);
-//        adminMessageListener.onReceivePlayerInfo(id, );
     }
 
     public void disconnect(int id) {

@@ -1,11 +1,17 @@
 package Client;
 
-public class ClientGameLogic {
+import Client.ClientNetwork.ClientMessageHandler;
+import Client.ClientNetwork.ClientNetworkManager;
 
-	Player me;
-	
+public class ClientGameLogic implements ClientNetworkManager.GameMessageListener{
+
+	private Player me;
+	private ClientNetworkManager networkManager;
+
 	public ClientGameLogic(Player player) {
 		this.me = player;
+        this.networkManager = ClientNetworkManager.getInstance();
+        networkManager.register(ClientMessageHandler.LISTENER_GAME, this);
 	} 
 	
 	/** 
@@ -42,5 +48,29 @@ public class ClientGameLogic {
 	public void updateScoreboard() {
 		
 	}
-	
+
+    @Override
+    public void onBeginGame() {
+
+    }
+
+    @Override
+    public void onBeginRound() {
+
+    }
+
+    @Override
+    public void onRoundEnd() {
+
+    }
+
+    @Override
+    public void onReceiveScores() {
+
+    }
+
+    @Override
+    public void onGameFinished() {
+
+    }
 }
