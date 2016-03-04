@@ -17,11 +17,11 @@ public class Client implements ClientNetworkManager.AdminMessageListener {
         playerList = new ArrayList<>();
     }
 
-    public void startClient(int port) {
+    public void startClient() {
         // Start client and register this class as a listener
         networkManager = ClientNetworkManager.getInstance();
         networkManager.register(ClientMessageHandler.LISTENER_ADMIN, this);
-        networkManager.startServerConnection(port);
+        networkManager.startServerConnection();
     }
 
     @Override
@@ -36,6 +36,6 @@ public class Client implements ClientNetworkManager.AdminMessageListener {
 
     public static void main(String[] args) {
         Client client = new Client();
-        client.startClient(Integer.parseInt(args[0]));
+        client.startClient();
     }
 }
