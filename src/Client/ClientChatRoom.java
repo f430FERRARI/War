@@ -2,7 +2,6 @@ package Client;
 
 import Client.ClientNetwork.ClientMessageHandler;
 import Client.ClientNetwork.ClientNetworkManager;
-import Server.Server;
 
 import java.util.Scanner;
 import java.util.concurrent.Callable;
@@ -11,26 +10,23 @@ import java.util.concurrent.Executors;
 
 public class ClientChatRoom implements ClientNetworkManager.ChatMessageListener {
 
-    public static final byte CHAT_SEND_MSG = 0x0;
-    public static final byte CHAT_RECEIVE_MSG = 0x1;
-
-    private Server server;
+    private Client client;
     private boolean inChat = false;
     private ClientNetworkManager networkManager;
 
-    public ClientChatRoom(Server server) {
-        this.server = server;
+    public ClientChatRoom(Client client) {
+        this.client = client;
         this.networkManager = ClientNetworkManager.getInstance();
         networkManager.register(ClientMessageHandler.LISTENER_CHAT, this);
     }
 
-    private void startChatRoom() {
+    public void startChatRoom() {
         inChat = true;
         System.out.println("Welcome to the chat room!");
-        sendChatMessage();
+        runChat();
     }
 
-    private void sendChatMessage() {
+    private void runChat() {
         // Create a thread for sending messages
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         try {
@@ -40,14 +36,20 @@ public class ClientChatRoom implements ClientNetworkManager.ChatMessageListener 
 
                     // Create a scanner so we can read the command-line input
                     Scanner scanner = new Scanner(System.in);
-                    System.out.println("Write your message: ");    // TODO: Get user name
 
                     while (inChat) {
+//                        System.out.println("WHERE: ");
+//                        String destination = scanner.next().trim();
+//                        int destID = client.getPlayerList().get(destination).getId();
+
                         // get their input as a String
+                        System.out.println("Write your message: ");
                         String text = scanner.next();
-                        byte[] textBytes = text.getBytes();     // Message text
-                        byte[] metadata = {CHAT_SEND_MSG, 0x1}; // Code, receiver
-                        networkManager.send(Utilities.appendByteArrays(metadata,textBytes)); // TODO: Get length
+                        byte[] destIDBytes = Utilities.intToByteArray(2);  // TODO: FOR DEBUG
+                        byte[] textBytes = Utilities.stringToByteArray(text);
+                        byte[] payload = Utilities.appendByteArrays(destIDBytes, textBytes);
+                        networkManager.send(Utilities.prepareMessage(CommunicationCodes.CHAT_SEND_MSG, client.getMe().
+                                getId(), payload));
                     }
 
                     return -1;
@@ -62,7 +64,7 @@ public class ClientChatRoom implements ClientNetworkManager.ChatMessageListener 
 
     @Override
     public void onClientReceiveMessage(int id, String text) {
-
+        System.out.println(text);
     }
 
     @Override

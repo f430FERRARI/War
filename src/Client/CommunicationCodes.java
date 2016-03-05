@@ -1,0 +1,19 @@
+package Client;
+
+public class CommunicationCodes {
+
+    // Administration Operation Codes (0x00 - 0x0F)
+    public static final byte ADMIN_REQUEST_INFO = 0x0;
+    public static final byte ADMIN_RESPONSE_INFO = 0x1;
+    public static final byte ADMIN_UPDATE_PLAYERS = 0x2;
+    public static final byte ADMIN_GET_PLAYERS = 0x3;
+
+    // Gameplay Operation Codes (0x10 - 0x1F)
+
+    // Chatroom Operation Codes (0x20 - 0x2F)
+    public static final byte CHAT_SEND_MSG = 0x20;
+    public static final byte CHAT_REDIRECT_MSG = 0x21;
+
+    // Lobby Operation Codes (0x30 - 0x3F)
+
+}

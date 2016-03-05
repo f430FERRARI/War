@@ -8,11 +8,7 @@ public class Player {
 	private String name;  
 	private int score;  
 	private ArrayList<Integer> cards;
-	
-	public Player(String name) { 
-		this.name = name;
-	}
-	
+
 	public int getId() {
 		return id;
 	}

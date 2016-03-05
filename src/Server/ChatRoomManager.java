@@ -13,6 +13,9 @@ public class ChatRoomManager implements ServerNetworkManager.ChatMessageListener
     }
 
     @Override
-    public void onServerReceiveChatMessage(int id, String text) {
+    public void onServerReceiveChatMessage(byte[] senderID, int destID, byte[] text) {
+        byte[] payload = Utilities.appendByteArrays(senderID, text);
+        byte[] message = Utilities.prepareMessage(CommunicationCodes.CHAT_REDIRECT_MSG, payload);
+        networkManager.send(destID, message);
     }
 }

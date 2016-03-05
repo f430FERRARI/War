@@ -1,9 +1,11 @@
 package Server.ServerNetwork;
 
 
-/**
- * Created by mlee43 on 2016-02-28.
- */
+import Server.CommunicationCodes;
+import Server.Utilities;
+
+import java.util.Arrays;
+
 public class ServerMessageHandler {
 
     public static final int LISTENER_GAME = 1;
@@ -18,22 +20,27 @@ public class ServerMessageHandler {
 
     public interface GameMessageListener {
         void onReceiveDraw();
+
         void onReceiveQuit(int id);
+
         void onReceivePause(int id);
     }
 
     public interface AdminMessageListener {
         void onReceivePlayerInfo(int id, String name); // TODO: Get password from this eventually
+
         void onDisconnect(int id);
     }
 
     public interface ChatMessageListener {
-        void onServerReceiveChatMessage(int id, String text);
+        void onServerReceiveChatMessage(byte[] senderID, int destID, byte[] text);
     }
 
     public interface LobbyMessageListener {
         void onClientJoinLobby(int id);
+
         void onClientExitLobby(int id);
+
         void onClientCreateLobby(int id, int playerCount);
     }
 
@@ -44,21 +51,25 @@ public class ServerMessageHandler {
      */
     public void handleMessage(byte[] message) {
 
-        switch (message[1]) {
+        byte opCode = message[0];
+        int senderID;
 
-            case 0x0:       // Client pressed draw
+        switch (opCode) {
+
+            case CommunicationCodes.ADMIN_RESPONSE_INFO:       // Client sent info
+                System.out.println("Got the info response.");
+                senderID = Utilities.byteArrayToInt(Arrays.copyOfRange(message, 1, 5));
+                String name = Utilities.byteArrayToString(Arrays.copyOfRange(message, 5, message.length));
+                adminMessageListener.onReceivePlayerInfo(senderID, name);
                 break;
-            case 0x1:       // Client pressed quit
+
+            case CommunicationCodes.CHAT_SEND_MSG:       // Client sent chat message
+                System.out.println("Got client chat message!");
+                byte[] senderIDBytes = Arrays.copyOfRange(message, 1, 5);
+                int destID = Utilities.byteArrayToInt(Arrays.copyOfRange(message, 5, 9));
+                byte[] text = Arrays.copyOfRange(message, 9, message.length);
+                chatMessageListener.onServerReceiveChatMessage(senderIDBytes, destID, text);
                 break;
-            case 0x2:       // Client pressed pause
-                break;
-            case 0x10:      // One-on-one chat message (Incoming)
-                break;
-            case 0x11:      // One-to-one chat message (Outgoing)
-                break;
-            case 0x12:      // One-to-many chat message (Incoming)
-                break;
-            case 0x13:      // One-to-many chat message (Outgoing)
         }
 
     }
@@ -66,7 +77,7 @@ public class ServerMessageHandler {
     /**
      * This method is used to register an object as a listener to one of the following interfaces.
      *
-     * @param kind The kind of events the listener wants to hear.
+     * @param kind     The kind of events the listener wants to hear.
      * @param listener A reference to the object that is going to listen.
      */
     public void register(int kind, Object listener) {

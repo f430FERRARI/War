@@ -42,18 +42,18 @@ public class ClientNetworkManager extends ClientMessageHandler {
      * This method starts communication between the client and the server. It then creates a seperate thread that always
      * listens for incoming messages from the server.
      */
-    public void startServerConnection() { // TODO: Port for testing
+    public void startServerConnection() {
         resetClientNetwork();
 
         // Create a new ongoing listener
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         try {
-            Socket clientSocket = new Socket("127.0.0.1", 2000); // TODO: Update these
+            clientSocket = new Socket("127.0.0.1", 2000); // TODO: Update these
             executorService.submit(new ClientServerListener(this, clientSocket));
         } catch (Exception exp) {
             exp.printStackTrace();
         } finally {
-            executorService.shutdownNow();
+            executorService.shutdownNow();  // TODO: May be shutting down early
         }
     }
 
@@ -63,10 +63,15 @@ public class ClientNetworkManager extends ClientMessageHandler {
      * @param message The byte array message.
      * @throws IOException
      */
-    public void send(byte[] message) throws IOException {
-        BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(clientSocket.getOutputStream());
-        bufferedOutputStream.write(message);
-        bufferedOutputStream.flush();
+    public void send(byte[] message) {
+        try {
+            BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(clientSocket.getOutputStream());
+            bufferedOutputStream.write(message);
+            bufferedOutputStream.flush();
+        } catch (IOException e) {
+            System.out.println("Error while sending!");
+        }
+
     }
 
     public boolean getConnected(){

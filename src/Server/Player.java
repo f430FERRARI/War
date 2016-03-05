@@ -9,8 +9,8 @@ public class Player {
 	private int score;  
 	private ArrayList<Integer> cards;
 	
-	public Player(String name) { 
-		this.name = name;
+	public Player(int id) {
+		this.id = id;
 	}
 	
 	public int getId() {

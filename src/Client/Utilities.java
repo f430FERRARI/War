@@ -1,5 +1,7 @@
 package Client;
 
+import java.io.UnsupportedEncodingException;
+
 public class Utilities {
 
     /**
@@ -53,7 +55,7 @@ public class Utilities {
      *
      * @param message The message to send to the player.
      */
-    private static byte[] prependMessageLength(byte[] message) {
+    private static byte[] prependMessageLength(byte[] message) { // TODO: Dont get this
         int messageLength = message.length;
         byte[] outputMessage = new byte[messageLength + 1];
 
@@ -64,5 +66,34 @@ public class Utilities {
         }
 
         return outputMessage;
+    }
+
+    public static String byteArrayToString(byte[] message) {
+        try {
+            String text = new String(message, "UTF-8");
+            return text;
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return null; // TODO
+        }
+
+    }
+
+    public static byte[] stringToByteArray(String text) {
+        try {
+            byte[] bytes = text.getBytes("UTF-8");
+            return bytes;
+        } catch (UnsupportedEncodingException e) {
+            System.out.println("Text not in UTF-8!");
+            return null; // TODO
+        }
+    }
+
+    public static byte[] prepareMessage(byte opCode, int clientID, byte[] payload) {
+        byte[] ops = {opCode};
+        byte[] senderID = intToByteArray(clientID);
+        byte[] metadata = appendByteArrays(ops, senderID);
+        byte[] message = prependMessageLength(appendByteArrays(metadata,payload));
+        return message;
     }
 }

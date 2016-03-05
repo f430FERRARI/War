@@ -1,5 +1,8 @@
 package Server.ServerNetwork;
 
+import Server.CommunicationCodes;
+import Server.Utilities;
+
 import java.io.BufferedOutputStream;
 import java.net.Socket;
 import java.util.HashMap;
@@ -8,9 +11,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ServerNetworkManager extends ServerMessageHandler implements ConnectionAcceptor.ConnectionListener {
-
-    public static final byte LOGIN_REQUEST_INFO = 0x0;
-    public static final byte LOGIN_RECEIVE_INFO = 0x1;
 
     private HashMap<Integer, Socket> playerConnections = new HashMap<>();
     private ExecutorService executorService = Executors.newCachedThreadPool(); // TODO: Might not work like this
@@ -60,13 +60,13 @@ public class ServerNetworkManager extends ServerMessageHandler implements Connec
      * This method starts a thread using the executor service to send a message by referencing the player id and socket
      * from the playerConnections ArrayList
      *
-     * @param id      The integer ID of the player that the message is being sent to
-     * @param message The message the player wants to send
+     * @param destinationId The integer ID of the player that the message is being sent to
+     * @param message       The message the player wants to send
      */
-    public void send(int id, byte[] message) {
+    public void send(int destinationId, byte[] message) {
         Socket destinationSocket = null;
-        if (!playerConnections.containsKey(id)) {
-            destinationSocket = playerConnections.get(id);
+        if (playerConnections.containsKey(destinationId)) {
+            destinationSocket = playerConnections.get(destinationId);
         } else {
             System.out.println("ID does not exist!");
             return;
@@ -88,7 +88,7 @@ public class ServerNetworkManager extends ServerMessageHandler implements Connec
      * Callback method to ConnectionAcceptor. Completes the connection by adding the new client to the connection list,
      * opening the client listener and requesting the player's info.
      *
-     * @param id The player's newly assigned id.
+     * @param id        The player's newly assigned id.
      * @param newSocket The player's associated socket info.
      */
     public void connect(int id, Socket newSocket) {
@@ -97,12 +97,23 @@ public class ServerNetworkManager extends ServerMessageHandler implements Connec
 
         // Start listening to the new client
         executorService.submit(new ServerClientListener(this, newSocket));
-        System.out.println("HEERRREESSS JOHHNNNYY!");
-        // TODO: Request name and create the player
+        System.out.println("HEERRREESSS JOHHNNNYY! The Listeners ID: " + id);   // Debug
+
+        // Send request for player info
+        byte[] message = Utilities.prepareMessage(CommunicationCodes.ADMIN_REQUEST_INFO, Utilities.intToByteArray(id));
+        send(id, message);
     }
 
     public void disconnect(int id) {
         playerConnections.remove(id);
         // TODO: Turn off listening thread
+    }
+
+    private void onIncompletedConnection() {
+        // TODO: Case where a client does not send name
+    }
+
+    public HashMap<Integer, Socket> getPlayerConnections() {
+        return playerConnections;
     }
 }

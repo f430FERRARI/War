@@ -34,7 +34,7 @@ public class ServerClientListener implements Callable {
      *
      * @return Returns -1 when it stops listening.
      */
-    private int listen() throws IOException { // TODO: Handle reading length
+    private int listen() throws IOException {
 
         BufferedInputStream bufferedInputStream = new BufferedInputStream(clientSocket.getInputStream());
         byte[] receivedMessage = null;
@@ -44,7 +44,7 @@ public class ServerClientListener implements Callable {
             if ((messageLength = bufferedInputStream.read()) != -1) {
                 receivedMessage = new byte[messageLength];
                 bufferedInputStream.read(receivedMessage, 0, messageLength);
-                manager.handleMessage(receivedMessage);
+                manager.handleMessage(receivedMessage); // TODO: May need this on its own thread
             }
         }
         return -1;

@@ -1,5 +1,7 @@
 package Server;
 
+import java.io.UnsupportedEncodingException;
+
 public class Utilities {
 
     /**
@@ -64,5 +66,31 @@ public class Utilities {
         }
 
         return outputMessage;
+    }
+
+    public static String byteArrayToString(byte[] message) {
+        try {
+            String text = new String(message, "UTF-8");
+            return text;
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return null; // TODO
+        }
+    }
+
+    public static byte[] stringToByteArray(String text) {
+        try {
+            byte[] bytes = text.getBytes("UTF-8");
+            return bytes;
+        } catch (UnsupportedEncodingException e) {
+            System.out.println("Text not in UTF-8!");
+            return null; // TODO
+        }
+    }
+
+    public static byte[] prepareMessage(byte opCode, byte[] payload) {
+        byte[] ops = {opCode};
+        byte[] message = prependMessageLength(appendByteArrays(ops,payload));
+        return message;
     }
 }
