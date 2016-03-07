@@ -85,6 +85,17 @@ public class ServerNetworkManager extends ServerMessageHandler implements Connec
     }
 
     /**
+     * This method sends the same message to all players in the connection list.
+     *
+     * @param message The message to be sent to the client.
+     */
+    public void sendToAll(byte[] message) {
+        for (int id : playerConnections.keySet()) {
+            send(id, message);
+        }
+    }
+
+    /**
      * Callback method to ConnectionAcceptor. Completes the connection by adding the new client to the connection list,
      * opening the client listener and requesting the player's info.
      *

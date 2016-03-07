@@ -55,7 +55,7 @@ public class Utilities {
      *
      * @param message The message to send to the player.
      */
-    private static byte[] prependMessageLength(byte[] message) { // TODO: Dont get this
+    public static byte[] prependMessageLength(byte[] message) { // TODO: Dont get this
         int messageLength = message.length;
         byte[] outputMessage = new byte[messageLength + 1];
 
@@ -94,6 +94,13 @@ public class Utilities {
         byte[] senderID = intToByteArray(clientID);
         byte[] metadata = appendByteArrays(ops, senderID);
         byte[] message = prependMessageLength(appendByteArrays(metadata,payload));
+        return message;
+    }
+
+    public static byte[] prepareOperationMessage(byte opCode, int clientID) {
+        byte[] ops = {opCode};
+        byte[] senderID = intToByteArray(clientID);
+        byte[] message = prependMessageLength(appendByteArrays(ops, senderID));
         return message;
     }
 }

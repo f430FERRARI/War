@@ -25,23 +25,34 @@ public class ClientGameLogic implements ClientNetworkManager.GameMessageListener
 	 * This method sends a draw message to the server. 
 	 */
 	public void draw() {
-		
+		// Send draw to the server
+        byte[] message = Utilities.prepareOperationMessage(CommunicationCodes.GAME_DRAW, me.getId());
+        networkManager.send(message);
 	} 
 	
 	/** 
 	 * This is a callback method that responds to a player pressing the quit button. It sends a quit message to the server.
 	 */
 	public void quit() {
-		
+		// Send quit to the server
+        byte[] message = Utilities.prepareOperationMessage(CommunicationCodes.GAME_REQUEST_QUIT, me.getId());
+        networkManager.send(message);
 	} 
 	
 	/** 
 	 * This is a callback method that responds to a player pressing the pause button. It sends a pause message to the server.  
 	 */
 	public void pause() {
-		
-	}
-	
+		// Send pause to the server
+        byte[] message = Utilities.prepareOperationMessage(CommunicationCodes.GAME_REQUEST_PAUSE, me.getId());
+        networkManager.send(message);
+    }
+
+    public void unPause() {
+        // Send unpause to the server
+        byte[] message = Utilities.prepareOperationMessage(CommunicationCodes.GAME_REQUEST_UNPAUSE, me.getId());
+        networkManager.send(message);
+    }
 	/** 
 	 * This method updates the scoreboard.
 	 */ 

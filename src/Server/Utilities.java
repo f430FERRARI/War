@@ -15,7 +15,6 @@ public class Utilities {
         byte[] c = new byte[a.length + b.length];
         System.arraycopy(a, 0, c, 0, a.length);
         System.arraycopy(b, 0, c, a.length, b.length);
-
         return c;
     }
 
@@ -55,7 +54,7 @@ public class Utilities {
      *
      * @param message The message to send to the player.
      */
-    private static byte[] prependMessageLength(byte[] message) {
+    public static byte[] prependMessageLength(byte[] message) {
         int messageLength = message.length;
         byte[] outputMessage = new byte[messageLength + 1];
 
@@ -90,7 +89,13 @@ public class Utilities {
 
     public static byte[] prepareMessage(byte opCode, byte[] payload) {
         byte[] ops = {opCode};
-        byte[] message = prependMessageLength(appendByteArrays(ops,payload));
+        byte[] message = prependMessageLength(appendByteArrays(ops, payload));
+        return message;
+    }
+
+    public static byte[] prepareOperationMessage(byte opCode) {
+        byte[] ops = {opCode};
+        byte[] message = prependMessageLength(ops);
         return message;
     }
 }

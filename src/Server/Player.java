@@ -1,14 +1,11 @@
 package Server;
 
-import java.util.ArrayList;
-
 public class Player {
 
 	private int id; 
 	private String name;  
 	private int score;  
-	private ArrayList<Integer> cards;
-	
+
 	public Player(int id) {
 		this.id = id;
 	}

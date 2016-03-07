@@ -9,11 +9,13 @@ import Server.ServerNetwork.ServerNetworkManager;
 public class GameLobbyManager implements ServerNetworkManager.LobbyMessageListener {
 
     private ServerNetworkManager networkManager;
+    private int gameLobbyCapacity;
+    private int lobbyCapacity;
 
     public GameLobbyManager() {
         this.networkManager = ServerNetworkManager.getInstance();
         networkManager.register(ServerMessageHandler.LISTENER_LOBBY, this);
-    }
+    } 
 
     @Override
     public void onClientJoinLobby(int id) {
