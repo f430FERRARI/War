@@ -95,12 +95,15 @@ public class ServerGameManager implements ServerMessageHandler.GameMessageListen
         // Send pause message to all the other players
     }
 
-    // Implementing Fisher–Yates shuffle
+    /**
+     * This method shuffles an array of integers using Fisher-Yates shuffle.
+     *
+     * @param ar The array to be shuffled.
+     */
     private void shuffleArray(int[] ar) {
         Random rnd = ThreadLocalRandom.current();
         for (int i = ar.length - 1; i > 0; i--) {
             int index = rnd.nextInt(i + 1);
-            // Simple swap
             int a = ar[index];
             ar[index] = ar[i];
             ar[i] = a;

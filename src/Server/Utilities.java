@@ -67,6 +67,12 @@ public class Utilities {
         return outputMessage;
     }
 
+    /**
+     * This method turns a byte array into a string that uses UTF-8 encoding.
+     *
+     * @param message The message to be decoded.
+     * @return A string representing the message.
+     */
     public static String byteArrayToString(byte[] message) {
         try {
             String text = new String(message, "UTF-8");
@@ -77,6 +83,12 @@ public class Utilities {
         }
     }
 
+    /**
+     * This method turns a string using UTF-8 encoding to a byte array.
+     *
+     * @param text The string to be encoded.
+     * @return The byte array representing the string.
+     */
     public static byte[] stringToByteArray(String text) {
         try {
             byte[] bytes = text.getBytes("UTF-8");
@@ -87,12 +99,25 @@ public class Utilities {
         }
     }
 
+    /**
+     * This method prepares a message to be sent by forming a byte array with an opcode, payload and length.
+     *
+     * @param opCode The operation code.
+     * @param payload The value to be sent.
+     * @return A send ready byte array.
+     */
     public static byte[] prepareMessage(byte opCode, byte[] payload) {
         byte[] ops = {opCode};
         byte[] message = prependMessageLength(appendByteArrays(ops, payload));
         return message;
     }
 
+    /**
+     * This method prepares a message that only sends an operation code.
+     *
+     * @param opCode The operation code.
+     * @return A send ready byte array.
+     */
     public static byte[] prepareOperationMessage(byte opCode) {
         byte[] ops = {opCode};
         byte[] message = prependMessageLength(ops);
