@@ -41,7 +41,9 @@ public class ServerMessageHandler {
 
         void onClientExitLobby(int id);
 
-        void onClientCreateLobby(int id, int playerCount);
+        void onClientJoinGameLobby(int id);
+
+        void onClientExitGameLobby(int id);
     }
 
     /**
