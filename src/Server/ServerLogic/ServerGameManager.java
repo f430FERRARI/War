@@ -1,4 +1,4 @@
-package Server;
+package Server.ServerLogic;
 
 import Server.ServerNetwork.ServerMessageHandler;
 import Server.ServerNetwork.ServerNetworkManager;

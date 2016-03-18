@@ -1,7 +1,8 @@
-package Client;
+package Client.ClientLogic;
 
 import Client.ClientNetwork.ClientMessageHandler;
 import Client.ClientNetwork.ClientNetworkManager;
+import Client.ClientNetwork.CommunicationCodes;
 
 public class ClientGameLogic implements ClientNetworkManager.GameMessageListener{
 

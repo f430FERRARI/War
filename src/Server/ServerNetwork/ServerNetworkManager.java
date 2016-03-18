@@ -1,7 +1,6 @@
 package Server.ServerNetwork;
 
-import Server.CommunicationCodes;
-import Server.Utilities;
+import Server.ServerLogic.Utilities;
 
 import java.io.BufferedOutputStream;
 import java.net.Socket;
@@ -112,7 +111,7 @@ public class ServerNetworkManager extends ServerMessageHandler implements Connec
 
     /**
      * Callback method to ConnectionAcceptor. Completes the connection by adding the new client to the connection list,
-     * opening the client listener and requesting the player's info.
+     * opening the client listener and sending their unique ID.
      *
      * @param id        The player's newly assigned id.
      * @param newSocket The player's associated socket info.
@@ -123,10 +122,10 @@ public class ServerNetworkManager extends ServerMessageHandler implements Connec
 
         // Start listening to the new client
         executorService.submit(new ServerClientListener(this, newSocket));
-        System.out.println("HEERRREESSS JOHHNNNYY! The Listeners ID: " + id);   // Debug
+        System.out.println("HEERRREESSS JOHHNNNYY! The Listeners ID: " + id);
 
-        // Send request for player info
-        byte[] message = Utilities.prepareMessage(CommunicationCodes.ADMIN_REQUEST_INFO, Utilities.intToByteArray(id));
+        // Send player their ID
+        byte[] message = Utilities.prepareMessage(CommunicationCodes.ADMIN_ASSIGN_ID, Utilities.intToByteArray(id));
         send(id, message);
     }
 

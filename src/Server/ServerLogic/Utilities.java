@@ -1,11 +1,11 @@
-package Server;
+package Server.ServerLogic;
 
 import java.io.UnsupportedEncodingException;
 
 public class Utilities {
 
-    public static final String PARSE_SPLITTER_1 = "~";
-    public static final String PARSE_SPLITTER_2 = "`";
+    public static final String PARSE_SPLITTER_ITEMS = "~";
+    public static final String PARSE_SPLITTER_TYPE = "`";
 
     /**
      * Appends two byte arrays together.

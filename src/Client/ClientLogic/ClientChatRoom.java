@@ -1,7 +1,8 @@
-package Client;
+package Client.ClientLogic;
 
 import Client.ClientNetwork.ClientMessageHandler;
 import Client.ClientNetwork.ClientNetworkManager;
+import Client.ClientNetwork.CommunicationCodes;
 
 import java.util.Scanner;
 import java.util.concurrent.Callable;

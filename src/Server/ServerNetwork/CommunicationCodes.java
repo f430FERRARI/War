@@ -1,12 +1,15 @@
-package Client;
+package Server.ServerNetwork;
 
 public class CommunicationCodes {
 
     // Administration Operation Codes (0x00 - 0x0F)
-    public static final byte ADMIN_REQUEST_INFO = 0x0;
-    public static final byte ADMIN_RESPONSE_INFO = 0x1;
+    public static final byte ADMIN_ASSIGN_ID = 0x0;
     public static final byte ADMIN_UPDATE_PLAYERS = 0x2;
-    public static final byte ADMIN_GET_PLAYERS = 0x3;
+    public static final byte ADMIN_GROUP_INFO = 0x3;
+    public static final byte ADMIN_LOGIN_ATTEMPT = 0x4;
+    public static final byte ADMIN_LOGIN_RESULT = 0x5;
+    public static final byte ADMIN_CREATE_ACCOUNT = 0x6;
+    public static final byte ADMIN_CREATE_RESULT = 0x7;
 
     // Lobby Operation Codes (0x10 - 0x1F)
     public static final byte LOBBY_JOIN_GAMELOBBY = 0x10;
@@ -34,5 +37,4 @@ public class CommunicationCodes {
     public static final byte GAME_REQUEST_QUIT = 0x34;
     public static final byte GAME_REQUEST_PAUSE = 0x35;
     public static final byte GAME_REQUEST_UNPAUSE = 0x36;
-
 }

@@ -1,8 +1,7 @@
 package Server.ServerNetwork;
 
 
-import Server.CommunicationCodes;
-import Server.Utilities;
+import Server.ServerLogic.Utilities;
 
 import java.util.Arrays;
 
@@ -18,22 +17,17 @@ public class ServerMessageHandler {
     protected ChatMessageListener chatMessageListener;
     protected LobbyMessageListener lobbyMessageListener;
 
-    public interface GameMessageListener {
-        void onReceiveDraw();
-
-        void onReceiveQuit(int id);
-
-        void onReceivePause(int id);
-    }
-
     public interface AdminMessageListener {
-        void onReceivePlayerInfo(int id, String name); // TODO: Get password from this eventually
+        void onCreateAccount(int id, String accountInfo);
+
+        void onReceiveLogin(int id, String loginInfo);
 
         void onDisconnect(int id);
     }
 
     public interface ChatMessageListener {
         void onServerRcvIndMsg(byte[] senderID, int destID, byte[] text);
+
         void onServerRcvGrpMsg(int senderId, byte[] senderIDBytes, byte[] text);
     }
 
@@ -51,6 +45,14 @@ public class ServerMessageHandler {
         void onClientExitObserver(int id);
     }
 
+    public interface GameMessageListener {
+        void onReceiveDraw();
+
+        void onReceiveQuit(int id);
+
+        void onReceivePause(int id);
+    }
+
     /**
      * This method handles all messages by delegating the task to the appropriate class.
      *
@@ -59,50 +61,49 @@ public class ServerMessageHandler {
     public void handleMessage(byte[] message) {
 
         byte opCode = message[0];
-        int senderId;
+        int senderId = getSenderId(message);
 
         switch (opCode) {
 
-            case CommunicationCodes.ADMIN_RESPONSE_INFO:
-                System.out.println("Got the info response.");
-                senderId = getSenderId(message);
-                String name = Utilities.byteArrayToString(Arrays.copyOfRange(message, 5, message.length));
-                adminMessageListener.onReceivePlayerInfo(senderId, name);
+            case CommunicationCodes.ADMIN_CREATE_ACCOUNT:
+                System.out.println("Received create account request.");
+                String accountInfo = Utilities.byteArrayToString(Arrays.copyOfRange(message, 5, message.length));
+                adminMessageListener.onCreateAccount(senderId, accountInfo);
+                break;
+
+            case CommunicationCodes.ADMIN_LOGIN_ATTEMPT:
+                System.out.println("Got player login info!");
+                String loginInfo = Utilities.byteArrayToString(Arrays.copyOfRange(message, 5, message.length));
+                adminMessageListener.onReceiveLogin(senderId, loginInfo);
                 break;
 
             case CommunicationCodes.LOBBY_JOIN_GAMELOBBY:
                 System.out.println("Got message! Client wants to join game lobby.");
-                senderId = getSenderId(message);
                 lobbyMessageListener.onClientJoinGameLobby(senderId);
                 break;
 
             case CommunicationCodes.LOBBY_EXIT_GAMELOBBY:
                 System.out.println("Got message! Client wants to exit game lobby!");
-                senderId = getSenderId(message);
                 lobbyMessageListener.onClientExitGameLobby(senderId);
                 break;
 
             case CommunicationCodes.LOBBY_JOIN_LOBBY:
                 System.out.println("Got message! Client wants to join lobby!");
-                senderId = getSenderId(message);
                 lobbyMessageListener.onClientJoinLobby(senderId);
                 break;
 
             case CommunicationCodes.LOBBY_EXIT_LOBBY:
                 System.out.println("Got message! Client wants to exit lobby!");
-                senderId = getSenderId(message);
                 lobbyMessageListener.onClientExitLobby(senderId);
                 break;
 
             case CommunicationCodes.LOBBY_JOIN_OBSERVER:
                 System.out.println("Got message! Client wants to join observers.");
-                senderId = getSenderId(message);
                 lobbyMessageListener.onClientJoinObserver(senderId);
                 break;
 
             case CommunicationCodes.LOBBY_EXIT_OBSERVER:
                 System.out.println("Got message! Client wants to leave observers.");
-                senderId = getSenderId(message);
                 lobbyMessageListener.onClientExitObserver(senderId);
                 break;
 
@@ -122,7 +123,6 @@ public class ServerMessageHandler {
                 chatMessageListener.onServerRcvGrpMsg(senderID2, senderIDBytes2, text2);
                 break;
         }
-
     }
 
     /**

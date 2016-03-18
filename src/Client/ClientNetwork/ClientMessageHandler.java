@@ -1,7 +1,6 @@
 package Client.ClientNetwork;
 
-import Client.CommunicationCodes;
-import Client.Utilities;
+import Client.ClientLogic.Utilities;
 
 import java.util.Arrays;
 
@@ -30,11 +29,13 @@ public class ClientMessageHandler {
     }
 
     public interface AdminMessageListener {
-        void onRequestInfo(int id);
+        void onReceiveID(int id);
+
+        void onReceiveLoginResult(String result);
+
+        void onReceiveCreateResult(String result);
 
         void onNewPlayerJoined(int id, String name);
-
-        void onConnectionComplete();
 
         void onReceiveIdsAndNames(String idsAndNames);
     }
@@ -70,13 +71,25 @@ public class ClientMessageHandler {
 
         switch (opCode) {
 
-            case CommunicationCodes.ADMIN_REQUEST_INFO:
-                int myId = Server.Utilities.byteArrayToInt(Arrays.copyOfRange(message, 1, 5));
-                System.out.println("Got the info request! My ID is: " + myId);
-                adminMessageListener.onRequestInfo(myId);
+            case CommunicationCodes.ADMIN_ASSIGN_ID:
+                int myId = Server.ServerLogic.Utilities.byteArrayToInt(Arrays.copyOfRange(message, 1, 5));
+                System.out.println("Got my ID! My ID is: " + myId);
+                adminMessageListener.onReceiveID(myId);
                 break;
 
-            case CommunicationCodes.ADMIN_GET_PLAYERS:
+            case CommunicationCodes.ADMIN_CREATE_RESULT:
+                System.out.println("Received result from account creation.");
+                String result = Utilities.byteArrayToString(Arrays.copyOfRange(message, 1, message.length));
+                adminMessageListener.onReceiveCreateResult(result);
+                break;
+
+            case CommunicationCodes.ADMIN_LOGIN_RESULT:
+                System.out.println("Got login result!");
+                String accountResult = Utilities.byteArrayToString(Arrays.copyOfRange(message, 1, message.length));
+                adminMessageListener.onReceiveLoginResult(accountResult);
+                break;
+
+            case CommunicationCodes.ADMIN_GROUP_INFO:
                 System.out.println("Received player names and ids!");
                 String idsAndNames = Utilities.byteArrayToString(Arrays.copyOfRange(message, 1, message.length));
                 adminMessageListener.onReceiveIdsAndNames(idsAndNames);

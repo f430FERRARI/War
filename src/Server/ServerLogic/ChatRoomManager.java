@@ -1,5 +1,6 @@
-package Server;
+package Server.ServerLogic;
 
+import Server.ServerNetwork.CommunicationCodes;
 import Server.ServerNetwork.ServerMessageHandler;
 import Server.ServerNetwork.ServerNetworkManager;
 

@@ -1,4 +1,4 @@
-package Client;
+package Client.ClientLogic;
 
 import Client.ClientNetwork.ClientMessageHandler;
 import Client.ClientNetwork.ClientNetworkManager;
@@ -27,19 +27,19 @@ public class ClientGameLobby implements ClientNetworkManager.LobbyMessageListene
     @Override
     public void onLobbyListChanged(String lists) {
         if (lists != null && !lists.isEmpty()) {
-            String[] lobbies = lists.split(Utilities.PARSE_SPLITTER_2);
+            String[] lobbies = lists.split(Utilities.PARSE_SPLITTER_TYPE);
 
-            String[] lobbyGuys = lobbies[0].split(Utilities.PARSE_SPLITTER_1);
+            String[] lobbyGuys = lobbies[0].split(Utilities.PARSE_SPLITTER_ITEMS);
             for (int i = 0; i < lobbyGuys.length; i++) {
                 lobbyList.add(Integer.parseInt(lobbyGuys[i]));
             }
 
-            String[] gameGuys = lobbies[1].split(Utilities.PARSE_SPLITTER_1);
+            String[] gameGuys = lobbies[1].split(Utilities.PARSE_SPLITTER_ITEMS);
             for (int i = 0; i < gameGuys.length; i++) {
                 gameLobbyList.add(Integer.parseInt(gameGuys[i]));
             }
 
-            String[] observerDudes = lobbies[2].split(Utilities.PARSE_SPLITTER_1);
+            String[] observerDudes = lobbies[2].split(Utilities.PARSE_SPLITTER_ITEMS);
             for (int i = 0; i < observerDudes.length; i++) {
                 observerList.add(Integer.parseInt(observerDudes[i]));
             }

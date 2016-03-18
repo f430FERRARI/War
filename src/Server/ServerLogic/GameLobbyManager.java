@@ -1,5 +1,6 @@
-package Server;
+package Server.ServerLogic;
 
+import Server.ServerNetwork.CommunicationCodes;
 import Server.ServerNetwork.ServerMessageHandler;
 import Server.ServerNetwork.ServerNetworkManager;
 
@@ -111,21 +112,21 @@ public class GameLobbyManager implements ServerNetworkManager.LobbyMessageListen
             StringBuilder builder = new StringBuilder();
             for (int lobbyGuy : lobbyList) {
                 builder.append(lobbyGuy);
-                builder.append(Utilities.PARSE_SPLITTER_1);
+                builder.append(Utilities.PARSE_SPLITTER_ITEMS);
             }
 
-            builder.append(Utilities.PARSE_SPLITTER_2);
+            builder.append(Utilities.PARSE_SPLITTER_TYPE);
 
             for (int gameGuy : gameLobbyList) {
                 builder.append(gameGuy);
-                builder.append(Utilities.PARSE_SPLITTER_1);
+                builder.append(Utilities.PARSE_SPLITTER_ITEMS);
             }
 
-            builder.append(Utilities.PARSE_SPLITTER_2);
+            builder.append(Utilities.PARSE_SPLITTER_TYPE);
 
             for (int observerDude : observerList) {
                 builder.append(observerDude);
-                builder.append(Utilities.PARSE_SPLITTER_1);
+                builder.append(Utilities.PARSE_SPLITTER_ITEMS);
             }
 
             // Send the string
