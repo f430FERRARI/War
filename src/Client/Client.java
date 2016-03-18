@@ -37,6 +37,7 @@ public class Client implements ClientNetworkManager.AdminMessageListener {
         // Assign myself the ID given by the server
         me.setId(id);
 
+        // TODO: This is where login starts
         // Create a scanner so we can read the command-line input
         Scanner scanner = new Scanner(System.in);
         System.out.println("What's yo name: ");
@@ -65,10 +66,10 @@ public class Client implements ClientNetworkManager.AdminMessageListener {
     @Override
     public void onReceiveIdsAndNames(String idsAndNames) {
         if (idsAndNames != null && !idsAndNames.isEmpty()) {
-            String[] players = idsAndNames.split("`");
+            String[] players = idsAndNames.split(Utilities.PARSE_SPLITTER_2);
 
             for (int i = 0; i < players.length; i++) {
-                String[] parts = players[i].split("~");
+                String[] parts = players[i].split(Utilities.PARSE_SPLITTER_1);
                 Player player = new Player();
                 player.setId(Integer.parseInt(parts[0]));
                 player.setName(parts[1]);

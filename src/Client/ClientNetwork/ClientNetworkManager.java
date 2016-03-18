@@ -6,9 +6,6 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * Created by mlee43 on 2016-02-27.
- */
 public class ClientNetworkManager extends ClientMessageHandler {
 
     private boolean connected = false;

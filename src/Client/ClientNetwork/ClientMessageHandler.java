@@ -40,7 +40,9 @@ public class ClientMessageHandler {
     }
 
     public interface ChatMessageListener {
-        void onClientReceiveMessage(int id, String text);
+        void onClientRcvIndvMsg(int id, String text);
+
+        void onClientRcvGrpMsg(int id, String text);
 
         void onSuccessfulChatroomEntry();
 
@@ -48,11 +50,13 @@ public class ClientMessageHandler {
     }
 
     public interface LobbyMessageListener {
-        void onSuccessfulLobbyEntry();
+        void onLobbyListChanged(String lists);
 
-        void onSuccessfulLobbyExit();
+        void onLobbyFull();
 
-        void onSuccessfulLobbyCreate();
+        void onGameLobbyFull();
+
+        void onObserverLobbyFull();
     }
 
     /**
@@ -72,13 +76,6 @@ public class ClientMessageHandler {
                 adminMessageListener.onRequestInfo(myId);
                 break;
 
-            case CommunicationCodes.CHAT_REDIRECT_MSG:
-                System.out.println("Got chat message from other guy.");
-                int senderID = Utilities.byteArrayToInt(Arrays.copyOfRange(message, 1, 5));
-                String text = Utilities.byteArrayToString(Arrays.copyOfRange(message, 5, message.length));
-                chatMessageListener.onClientReceiveMessage(senderID, text);
-                break;
-
             case CommunicationCodes.ADMIN_GET_PLAYERS:
                 System.out.println("Received player names and ids!");
                 String idsAndNames = Utilities.byteArrayToString(Arrays.copyOfRange(message, 1, message.length));
@@ -91,6 +88,43 @@ public class ClientMessageHandler {
                 String name = Utilities.byteArrayToString(Arrays.copyOfRange(message, 5, message.length));
                 adminMessageListener.onNewPlayerJoined(id, name);
                 break;
+
+            case CommunicationCodes.LOBBY_LISTS_CHANGED:
+                System.out.println("Got message! Lobby list changed!");
+                String lists = Utilities.byteArrayToString(Arrays.copyOfRange(message, 1, message.length));
+                lobbyMessageListener.onLobbyListChanged(lists);
+                break;
+
+            case CommunicationCodes.LOBBY_LOBBY_FULL:
+                System.out.println("Got message! Lobby full.");
+                lobbyMessageListener.onLobbyFull();
+                break;
+
+            case CommunicationCodes.LOBBY_GAMELOBBY_FULL:
+                System.out.println("Got message! Game lobby full.");
+                lobbyMessageListener.onGameLobbyFull();
+                break;
+
+            case CommunicationCodes.LOBBY_OBSERVER_FULL:
+                System.out.println("Got message! Observer list full!");
+                lobbyMessageListener.onObserverLobbyFull();
+                break;
+
+            case CommunicationCodes.CHAT_REDIRECT_IND_MSG:
+                System.out.println("Got individual chat message from other guy.");
+                int senderID1 = Utilities.byteArrayToInt(Arrays.copyOfRange(message, 1, 5));
+                String text1 = Utilities.byteArrayToString(Arrays.copyOfRange(message, 5, message.length));
+                chatMessageListener.onClientRcvIndvMsg(senderID1, text1);
+                break;
+
+            case CommunicationCodes.CHAT_REDIRECT_GRP_MSG:
+                System.out.println("Got group message from other guy!");
+                int senderID2 = Utilities.byteArrayToInt(Arrays.copyOfRange(message, 1, 5));
+                String text2 = Utilities.byteArrayToString(Arrays.copyOfRange(message, 5, message.length));
+                chatMessageListener.onClientRcvGrpMsg(senderID2, text2);
+                break;
+
+
         }
     }
 

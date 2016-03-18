@@ -33,7 +33,8 @@ public class ServerMessageHandler {
     }
 
     public interface ChatMessageListener {
-        void onServerReceiveChatMessage(byte[] senderID, int destID, byte[] text);
+        void onServerRcvIndMsg(byte[] senderID, int destID, byte[] text);
+        void onServerRcvGrpMsg(int senderId, byte[] senderIDBytes, byte[] text);
     }
 
     public interface LobbyMessageListener {
@@ -44,6 +45,10 @@ public class ServerMessageHandler {
         void onClientJoinGameLobby(int id);
 
         void onClientExitGameLobby(int id);
+
+        void onClientJoinObserver(int id);
+
+        void onClientExitObserver(int id);
     }
 
     /**
@@ -54,26 +59,80 @@ public class ServerMessageHandler {
     public void handleMessage(byte[] message) {
 
         byte opCode = message[0];
-        int senderID;
+        int senderId;
 
         switch (opCode) {
 
-            case CommunicationCodes.ADMIN_RESPONSE_INFO:       // Client sent info
+            case CommunicationCodes.ADMIN_RESPONSE_INFO:
                 System.out.println("Got the info response.");
-                senderID = Utilities.byteArrayToInt(Arrays.copyOfRange(message, 1, 5));
+                senderId = getSenderId(message);
                 String name = Utilities.byteArrayToString(Arrays.copyOfRange(message, 5, message.length));
-                adminMessageListener.onReceivePlayerInfo(senderID, name);
+                adminMessageListener.onReceivePlayerInfo(senderId, name);
                 break;
 
-            case CommunicationCodes.CHAT_SEND_MSG:       // Client sent chat message
+            case CommunicationCodes.LOBBY_JOIN_GAMELOBBY:
+                System.out.println("Got message! Client wants to join game lobby.");
+                senderId = getSenderId(message);
+                lobbyMessageListener.onClientJoinGameLobby(senderId);
+                break;
+
+            case CommunicationCodes.LOBBY_EXIT_GAMELOBBY:
+                System.out.println("Got message! Client wants to exit game lobby!");
+                senderId = getSenderId(message);
+                lobbyMessageListener.onClientExitGameLobby(senderId);
+                break;
+
+            case CommunicationCodes.LOBBY_JOIN_LOBBY:
+                System.out.println("Got message! Client wants to join lobby!");
+                senderId = getSenderId(message);
+                lobbyMessageListener.onClientJoinLobby(senderId);
+                break;
+
+            case CommunicationCodes.LOBBY_EXIT_LOBBY:
+                System.out.println("Got message! Client wants to exit lobby!");
+                senderId = getSenderId(message);
+                lobbyMessageListener.onClientExitLobby(senderId);
+                break;
+
+            case CommunicationCodes.LOBBY_JOIN_OBSERVER:
+                System.out.println("Got message! Client wants to join observers.");
+                senderId = getSenderId(message);
+                lobbyMessageListener.onClientJoinObserver(senderId);
+                break;
+
+            case CommunicationCodes.LOBBY_EXIT_OBSERVER:
+                System.out.println("Got message! Client wants to leave observers.");
+                senderId = getSenderId(message);
+                lobbyMessageListener.onClientExitObserver(senderId);
+                break;
+
+            case CommunicationCodes.CHAT_SEND_IND_MSG:
                 System.out.println("Got client chat message!");
-                byte[] senderIDBytes = Arrays.copyOfRange(message, 1, 5);
-                int destID = Utilities.byteArrayToInt(Arrays.copyOfRange(message, 5, 9));
-                byte[] text = Arrays.copyOfRange(message, 9, message.length);
-                chatMessageListener.onServerReceiveChatMessage(senderIDBytes, destID, text);
+                byte[] senderIDBytes1 = Arrays.copyOfRange(message, 1, 5);
+                int destID1 = Utilities.byteArrayToInt(Arrays.copyOfRange(message, 5, 9));
+                byte[] text1 = Arrays.copyOfRange(message, 9, message.length);
+                chatMessageListener.onServerRcvIndMsg(senderIDBytes1, destID1, text1);
+                break;
+
+            case CommunicationCodes.CHAT_SEND_GRP_MSG:
+                System.out.println("Got group chat message!");
+                byte[] senderIDBytes2 = Arrays.copyOfRange(message, 1, 5);
+                int senderID2 = Utilities.byteArrayToInt(senderIDBytes2);
+                byte[] text2 = Arrays.copyOfRange(message, 5, message.length);
+                chatMessageListener.onServerRcvGrpMsg(senderID2, senderIDBytes2, text2);
                 break;
         }
 
+    }
+
+    /**
+     * This is a helper method that gets integer representation of the sender's ID from the message.
+     *
+     * @param message The message with the sender's ID
+     * @return An integer representing the sender's ID
+     */
+    private int getSenderId(byte[] message) {
+        return Utilities.byteArrayToInt(Arrays.copyOfRange(message, 1, 5));
     }
 
     /**

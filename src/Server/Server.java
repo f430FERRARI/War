@@ -43,9 +43,9 @@ public class Server implements ServerNetworkManager.AdminMessageListener {
             StringBuilder builder = new StringBuilder();
             for (int playerId : playerList.keySet()) {
                 builder.append(playerId);
-                builder.append("~");
+                builder.append(Utilities.PARSE_SPLITTER_1);
                 builder.append(playerList.get(playerId).getName());
-                builder.append("`");
+                builder.append(Utilities.PARSE_SPLITTER_2);
             }
             byte[] idsAndNames = Utilities.stringToByteArray(builder.toString());
             networkManager.send(id, Utilities.prepareMessage(CommunicationCodes.ADMIN_GET_PLAYERS, idsAndNames));

@@ -48,7 +48,7 @@ public class ClientChatRoom implements ClientNetworkManager.ChatMessageListener 
                         byte[] destIDBytes = Utilities.intToByteArray(2);  // TODO: FOR DEBUG
                         byte[] textBytes = Utilities.stringToByteArray(text);
                         byte[] payload = Utilities.appendByteArrays(destIDBytes, textBytes);
-                        networkManager.send(Utilities.prepareMessage(CommunicationCodes.CHAT_SEND_MSG, client.getMe().
+                        networkManager.send(Utilities.prepareMessage(CommunicationCodes.CHAT_SEND_IND_MSG, client.getMe().
                                 getId(), payload));
                     }
 
@@ -63,8 +63,13 @@ public class ClientChatRoom implements ClientNetworkManager.ChatMessageListener 
     }
 
     @Override
-    public void onClientReceiveMessage(int id, String text) {
-        System.out.println(text);
+    public void onClientRcvIndvMsg(int id, String text) {
+
+    }
+
+    @Override
+    public void onClientRcvGrpMsg(int id, String text) {
+
     }
 
     @Override

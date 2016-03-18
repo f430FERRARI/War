@@ -13,8 +13,5 @@ public class Login {
      * This method verifies the login information entered by the client.
      */
     public static void checkLogin() {
-
     }
-
-
 }

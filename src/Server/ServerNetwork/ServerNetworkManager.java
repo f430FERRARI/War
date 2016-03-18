@@ -95,6 +95,21 @@ public class ServerNetworkManager extends ServerMessageHandler implements Connec
         }
     }
 
+
+    /**
+     * This method sends a message to all players except for the one person specific player.
+     *
+     * @param theOne The player that will not receive the message.
+     * @param message The message to be sent.
+     */
+    public void sendToAllButOne(int theOne, byte[] message) {
+        for (int id : playerConnections.keySet()) {
+            if (id != theOne) {
+                send(id, message);
+            }
+        }
+    }
+
     /**
      * Callback method to ConnectionAcceptor. Completes the connection by adding the new client to the connection list,
      * opening the client listener and requesting the player's info.

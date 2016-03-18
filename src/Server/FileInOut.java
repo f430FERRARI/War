@@ -5,14 +5,9 @@ import java.util.ArrayList;
 
 public class FileInOut {
 
-    public static final String FILE_PASSWORDS = "Passwords.txt";
-    public static final String FILE_WINS = "Wins.txt";
-    public static final String FILE_SCORES = "Scores.txt";
+    public static final String FILE_ACCOUNTS = "Accounts.txt";
 
-    public static final String PARSE_SPLITTER_1 = "%";
-    public static final String PARSE_LOGIN = "~";
-    public static final String PARSE_HIGH_SCORE = "`";
-    public static final String PARSE_WINS = "$";
+    public static final String PARSE_SPLITTER_1 = "~";
 
     private static final String PATH = ""; // TODO: Get the right path
 
@@ -68,13 +63,5 @@ public class FileInOut {
         } catch (IOException ioe) {
             System.err.println("IOException: " + ioe.getMessage());
         }
-    }
-
-    public static void main(String[] args) {
-        FileInOut fileInOut = new FileInOut();
-        writeToFile(FILE_SCORES, "2232%yo");
-        writeToFile(FILE_SCORES, "1212%My name is Joe");
-        writeToFile(FILE_SCORES, "11111%I work in a button factory");
-        System.out.println(readFromFile(FILE_SCORES, 1212));
     }
 }
