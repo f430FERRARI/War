@@ -112,21 +112,21 @@ public class GameLobbyManager implements ServerNetworkManager.LobbyMessageListen
             StringBuilder builder = new StringBuilder();
             for (int lobbyGuy : lobbyList) {
                 builder.append(lobbyGuy);
-                builder.append(Utilities.PARSE_SPLITTER_ITEMS);
+                builder.append(Utilities.PARSE_SPLITTER_FIELD);
             }
 
-            builder.append(Utilities.PARSE_SPLITTER_TYPE);
+            builder.append(Utilities.PARSE_SPLITTER_ENTRY);
 
             for (int gameGuy : gameLobbyList) {
                 builder.append(gameGuy);
-                builder.append(Utilities.PARSE_SPLITTER_ITEMS);
+                builder.append(Utilities.PARSE_SPLITTER_FIELD);
             }
 
-            builder.append(Utilities.PARSE_SPLITTER_TYPE);
+            builder.append(Utilities.PARSE_SPLITTER_ENTRY);
 
             for (int observerDude : observerList) {
                 builder.append(observerDude);
-                builder.append(Utilities.PARSE_SPLITTER_ITEMS);
+                builder.append(Utilities.PARSE_SPLITTER_FIELD);
             }
 
             // Send the string

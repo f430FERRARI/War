@@ -6,6 +6,7 @@ import Server.ServerNetwork.ServerNetworkManager;
 
 import java.util.HashMap;
 
+// TODO: Make sure there is only one player with a certain name online
 public class Server implements ServerNetworkManager.AdminMessageListener {
 
     private HashMap<Integer, Player> playerList;
@@ -28,37 +29,39 @@ public class Server implements ServerNetworkManager.AdminMessageListener {
 
     @Override
     public void onCreateAccount(int id, String accountInfo) {
-        String[] parts = accountInfo.split(Utilities.PARSE_SPLITTER_TYPE);
+        String[] parts = accountInfo.split(Utilities.PARSE_SPLITTER_ENTRY);
 
-        if (Login.createNewLogin(parts[0], parts[1])) {
+        String result = Login.createNewLogin(parts[0], parts[1]);
+        if (result.equals("Success")) {
 
             addPlayer(id, parts[0]);
 
             // Send the player the result of creating an account
-            byte[] result = Utilities.stringToByteArray(Login.LOGIN_SUCCESS);
-            networkManager.send(id, Utilities.prepareMessage(CommunicationCodes.ADMIN_CREATE_RESULT, result));
+            byte[] resultBytes = Utilities.stringToByteArray(result);
+            networkManager.send(id, Utilities.prepareMessage(CommunicationCodes.ADMIN_CREATE_RESULT, resultBytes));
 
         } else {
-            byte[] result = Utilities.stringToByteArray(Login.LOGIN_FAILURE);
-            networkManager.send(id, Utilities.prepareMessage(CommunicationCodes.ADMIN_CREATE_RESULT, result));
+            byte[] resultBytes = Utilities.stringToByteArray(result);
+            networkManager.send(id, Utilities.prepareMessage(CommunicationCodes.ADMIN_CREATE_RESULT, resultBytes));
         }
     }
 
     @Override
     public void onReceiveLogin(int id, String loginInfo) {
-        String[] parts = loginInfo.split(Utilities.PARSE_SPLITTER_TYPE);
+        String[] parts = loginInfo.split(Utilities.PARSE_SPLITTER_ENTRY);
 
-        if (Login.verifyLogin(parts[0], parts[1])) {
+        String result = Login.verifyLogin(parts[0], parts[1]);
+        if (result.equals("Success")) {
 
             addPlayer(id, parts[0]);
 
             // Send the player the login result
-            byte[] result = Utilities.stringToByteArray(Login.LOGIN_SUCCESS);
-            networkManager.send(id, Utilities.prepareMessage(CommunicationCodes.ADMIN_LOGIN_RESULT, result));
+            byte[] resultBytes = Utilities.stringToByteArray(result);
+            networkManager.send(id, Utilities.prepareMessage(CommunicationCodes.ADMIN_LOGIN_RESULT, resultBytes));
 
         } else {
-            byte[] result = Utilities.stringToByteArray(Login.LOGIN_FAILURE);
-            networkManager.send(id, Utilities.prepareMessage(CommunicationCodes.ADMIN_LOGIN_RESULT, result));
+            byte[] resultBytes = Utilities.stringToByteArray(result);
+            networkManager.send(id, Utilities.prepareMessage(CommunicationCodes.ADMIN_LOGIN_RESULT, resultBytes));
         }
     }
 
@@ -72,9 +75,9 @@ public class Server implements ServerNetworkManager.AdminMessageListener {
             StringBuilder builder = new StringBuilder();
             for (int playerId : playerList.keySet()) {
                 builder.append(playerId);
-                builder.append(Utilities.PARSE_SPLITTER_ITEMS);
+                builder.append(Utilities.PARSE_SPLITTER_FIELD);
                 builder.append(playerList.get(playerId).getName());
-                builder.append(Utilities.PARSE_SPLITTER_TYPE);
+                builder.append(Utilities.PARSE_SPLITTER_ENTRY);
             }
             byte[] idsAndNames = Utilities.stringToByteArray(builder.toString());
             networkManager.send(id, Utilities.prepareMessage(CommunicationCodes.ADMIN_GROUP_INFO, idsAndNames));

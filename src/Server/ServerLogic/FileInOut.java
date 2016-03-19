@@ -7,18 +7,16 @@ public class FileInOut {
 
     public static final String FILE_ACCOUNTS = "Accounts.txt";
 
-    public static final String PARSE_SPLITTER_1 = "~";
-
     private static final String PATH = ""; // TODO: Get the right path
 
     /**
      * Reads the latest entry for a player from a file.
      *
      * @param filename The name of the file to be read.
-     * @param id       The id of the player.
+     * @param username The username of the player
      * @return The latest entry for the player or null if the player did not have an entry.
      */
-    public static String readFromFile(String filename, int id) {
+    public static String readFromFile(String filename, String username) {
 
         // Read in the file from top to bottom
         ArrayList<String> tmp = new ArrayList<>();
@@ -41,9 +39,9 @@ public class FileInOut {
         // Read the array from the back to the front.
         // There's an extra blank line at the bottom of the file so its -2
         for (int i = (tmp.size() - 2); i >= 0; i--) {
-            String[] parts = tmp.get(i).split(PARSE_SPLITTER_1);
-            if (Integer.parseInt(parts[0]) == id) {
-                return parts[1];
+            String[] parts = tmp.get(i).split(Utilities.PARSE_SPLITTER_FIELD);
+            if (parts[0].equals(username)) {
+                return tmp.get(i);
             }
         }
 
@@ -63,5 +61,19 @@ public class FileInOut {
         } catch (IOException ioe) {
             System.err.println("IOException: " + ioe.getMessage());
         }
+    }
+
+    public static void clearFile(String filename) {
+        PrintWriter pw = null;
+        try {
+            pw = new PrintWriter(filename);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        pw.close();
+    }
+
+    public static void main(String[] args) {
+        FileInOut.clearFile(FILE_ACCOUNTS);
     }
 }

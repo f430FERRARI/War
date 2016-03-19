@@ -76,6 +76,7 @@ public class Client implements LoginDialog.LoginDialogListener, AccountDialog.Ac
     @Override
     public void onReceiveCreateResult(String result) {
         if (result.equals("Success")) {
+            System.out.println("Account created successfully.");
             gameLobbyForm = new GameLobbyForm();
             theFrame.setContentPane(gameLobbyForm.getContentPane());
             theFrame.setLocationRelativeTo(null);
@@ -84,6 +85,7 @@ public class Client implements LoginDialog.LoginDialogListener, AccountDialog.Ac
             accountDialog.dispose();
         } else {
             // TODO: Display error message
+            System.out.println(result);
         }
     }
 
@@ -96,6 +98,7 @@ public class Client implements LoginDialog.LoginDialogListener, AccountDialog.Ac
     @Override
     public void onReceiveLoginResult(String result) {
         if (result.equals("Success")) {
+            System.out.println("Login successful.");
             gameLobbyForm = new GameLobbyForm();
             theFrame.setContentPane(gameLobbyForm.getContentPane());
             theFrame.setLocationRelativeTo(null);
@@ -104,6 +107,7 @@ public class Client implements LoginDialog.LoginDialogListener, AccountDialog.Ac
             lDialog.dispose();
         } else {
             // TODO: Display error message
+            System.out.println(result);
         }
     }
 
