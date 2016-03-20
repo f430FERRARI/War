@@ -3,6 +3,7 @@ package Client.GUI;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 /**
  * Created by enanthav on 3/17/16.
@@ -22,19 +23,38 @@ public class GameLobbyForm {
     private JTextArea publicChatArea;
     private JTextArea privateChatArea;
 
+    private DefaultListModel onlineListModel, playerListModel, observerListModel;
+
+    private LobbyGUIListener lobbyGUIListener;
+
+    public interface LobbyGUIListener {
+        void onClickJoin();
+
+        void onClickObserve();
+
+        void onClickStart();
+    }
+
     public GameLobbyForm() {
+
+        onlineListModel = new DefaultListModel();
+        playerListModel = new DefaultListModel();
+        observerListModel = new DefaultListModel();
+
         joinButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-
+                lobbyGUIListener.onClickJoin();
             }
         });
+
         observeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-
+                lobbyGUIListener.onClickObserve();
             }
         });
+
         sendButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -42,17 +62,39 @@ public class GameLobbyForm {
             }
         });
     }
+
+    public void updateLobbyLists(ArrayList<String> online, ArrayList<String> game, ArrayList<String> observers) {
+        // Clear all the old lists
+        onlineListModel.removeAllElements();
+        playerListModel.removeAllElements();
+        observerListModel.removeAllElements();
+
+        // Populate the online list and chat room list with the updated lists
+        for (String onlineGuy : online) {
+            onlineListModel.addElement(onlineGuy);
+        }
+        onlineList.setModel(onlineListModel);
+        inChatList.setModel(onlineListModel);
+
+        // Populate the game lobby list with the updated list
+        for (String gameGuy : game) {
+            playerListModel.addElement(gameGuy);
+        }
+        playerList.setModel(playerListModel);
+
+        // Populate the observer list with the updated list
+        for (String observerDude : observers) {
+            observerListModel.addElement(observerDude);
+        }
+        observerList.setModel(observerListModel);
+    }
+
     public JPanel getContentPane() {
         return this.lobbyPanel;
     }
-    /*
-    public static void main(String[] args){
-        JFrame lobbyFrame = new JFrame("Welcome to War");
-        lobbyFrame.setContentPane(new GameLobbyForm().lobbyPanel);
-        lobbyFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        lobbyFrame.setLocationRelativeTo(null); // centre
-        lobbyFrame.pack();
-        lobbyFrame.setVisible(true);
+
+
+    public void register(Object listener) {
+        lobbyGUIListener = (LobbyGUIListener) listener;
     }
-    */
 }

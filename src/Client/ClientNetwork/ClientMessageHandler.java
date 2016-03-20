@@ -51,7 +51,7 @@ public class ClientMessageHandler {
     }
 
     public interface LobbyMessageListener {
-        void onLobbyListChanged(String lists);
+        void onReceiveLobbyLists(String lists);
 
         void onLobbyFull();
 
@@ -102,10 +102,10 @@ public class ClientMessageHandler {
                 adminMessageListener.onNewPlayerJoined(id, name);
                 break;
 
-            case CommunicationCodes.LOBBY_LISTS_CHANGED:
+            case CommunicationCodes.LOBBY_LISTS_SEND:
                 System.out.println("Got message! Lobby list changed!");
                 String lists = Utilities.byteArrayToString(Arrays.copyOfRange(message, 1, message.length));
-                lobbyMessageListener.onLobbyListChanged(lists);
+                lobbyMessageListener.onReceiveLobbyLists(lists);
                 break;
 
             case CommunicationCodes.LOBBY_LOBBY_FULL:
@@ -136,8 +136,6 @@ public class ClientMessageHandler {
                 String text2 = Utilities.byteArrayToString(Arrays.copyOfRange(message, 5, message.length));
                 chatMessageListener.onClientRcvGrpMsg(senderID2, text2);
                 break;
-
-
         }
     }
 

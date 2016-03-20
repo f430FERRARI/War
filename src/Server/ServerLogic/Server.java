@@ -7,16 +7,22 @@ import Server.ServerNetwork.ServerNetworkManager;
 import java.util.HashMap;
 
 // TODO: Make sure there is only one player with a certain name online
+// TODO: Create file on first run
+// TODO: Change int ids to bytes
 public class Server implements ServerNetworkManager.AdminMessageListener {
 
-    private HashMap<Integer, Player> playerList;
+    private HashMap<Integer, Player> playerList = new HashMap<>();
     private ServerNetworkManager networkManager;
+    private ChatRoomManager chatRoomManager;
+    private GameLobbyManager gameLobbyManager;
+    private ServerGameManager serverGameManager;
 
     public Server() {
-        playerList = new HashMap<>();
-    }
+        // Create system components
+        chatRoomManager = new ChatRoomManager();
+        gameLobbyManager = new GameLobbyManager();
+//        serverGameManager = new ServerGameManager();
 
-    public void startServer() {
         // Start the server network and register this class as a listener
         networkManager = ServerNetworkManager.getInstance();
         networkManager.register(ServerMessageHandler.LISTENER_ADMIN, this);
@@ -30,6 +36,8 @@ public class Server implements ServerNetworkManager.AdminMessageListener {
     @Override
     public void onCreateAccount(int id, String accountInfo) {
         String[] parts = accountInfo.split(Utilities.PARSE_SPLITTER_ENTRY);
+
+        // TODO: Check if lobby full
 
         String result = Login.createNewLogin(parts[0], parts[1]);
         if (result.equals("Success")) {
@@ -49,6 +57,8 @@ public class Server implements ServerNetworkManager.AdminMessageListener {
     @Override
     public void onReceiveLogin(int id, String loginInfo) {
         String[] parts = loginInfo.split(Utilities.PARSE_SPLITTER_ENTRY);
+
+        // TODO: Check if lobby full or if the user is already logged in
 
         String result = Login.verifyLogin(parts[0], parts[1]);
         if (result.equals("Success")) {
@@ -89,14 +99,12 @@ public class Server implements ServerNetworkManager.AdminMessageListener {
         byte[] payload = Utilities.appendByteArrays(idBytes, nameBytes);
         networkManager.sendToAll(Utilities.prepareMessage(CommunicationCodes.ADMIN_UPDATE_PLAYERS, payload));
 
-        // Add the player to the playerlist
+        // Add the player to the playerlist and the lobby
         playerList.put(id, newPlayer);
-
-        // TODO: Add the player to the lobby
+        gameLobbyManager.onClientJoinLobby(id);  // TODO: this changed first
     }
 
     public static void main(String[] args) {
         Server server = new Server();
-        server.startServer();
     }
 }

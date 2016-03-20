@@ -14,9 +14,9 @@ public class CommunicationCodes {
     // Lobby Operation Codes (0x10 - 0x1F)
     public static final byte LOBBY_JOIN_GAMELOBBY = 0x10;
     public static final byte LOBBY_EXIT_GAMELOBBY = 0x11;
-    public static final byte LOBBY_JOIN_LOBBY = 0x12;
+    public static final byte LOBBY_REQUEST_LISTS = 0x12;
     public static final byte LOBBY_EXIT_LOBBY = 0x13;
-    public static final byte LOBBY_LISTS_CHANGED = 0x14;
+    public static final byte LOBBY_LISTS_SEND = 0x14;
     public static final byte LOBBY_LOBBY_FULL = 0x15;
     public static final byte LOBBY_GAMELOBBY_FULL = 0x16;
     public static final byte LOBBY_OBSERVER_FULL = 0x17;

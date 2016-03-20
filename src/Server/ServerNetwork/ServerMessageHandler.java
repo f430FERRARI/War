@@ -32,6 +32,8 @@ public class ServerMessageHandler {
     }
 
     public interface LobbyMessageListener {
+        void onRequestLobbyList(int id);
+
         void onClientJoinLobby(int id);
 
         void onClientExitLobby(int id);
@@ -77,6 +79,11 @@ public class ServerMessageHandler {
                 adminMessageListener.onReceiveLogin(senderId, loginInfo);
                 break;
 
+            case CommunicationCodes.LOBBY_REQUEST_LISTS:
+                System.out.println("Got request for lobby lists.");
+                lobbyMessageListener.onRequestLobbyList(senderId);
+                break;
+
             case CommunicationCodes.LOBBY_JOIN_GAMELOBBY:
                 System.out.println("Got message! Client wants to join game lobby.");
                 lobbyMessageListener.onClientJoinGameLobby(senderId);
@@ -85,11 +92,6 @@ public class ServerMessageHandler {
             case CommunicationCodes.LOBBY_EXIT_GAMELOBBY:
                 System.out.println("Got message! Client wants to exit game lobby!");
                 lobbyMessageListener.onClientExitGameLobby(senderId);
-                break;
-
-            case CommunicationCodes.LOBBY_JOIN_LOBBY:
-                System.out.println("Got message! Client wants to join lobby!");
-                lobbyMessageListener.onClientJoinLobby(senderId);
                 break;
 
             case CommunicationCodes.LOBBY_EXIT_LOBBY:

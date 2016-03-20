@@ -4,8 +4,8 @@ import java.io.UnsupportedEncodingException;
 
 public class Utilities {
 
-    public static final String PARSE_SPLITTER_ITEMS = "~";
-    public static final String PARSE_SPLITTER_TYPE = "`";
+    public static final String PARSE_SPLITTER_FIELD = "~";
+    public static final String PARSE_SPLITTER_ENTRY = "`";
 
     /**
      * Appends two byte arrays together.
