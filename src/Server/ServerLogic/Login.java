@@ -4,6 +4,8 @@ public class Login {
 
     /**
      * This method creates a new login by saving it to the login file.
+     *
+     * @return A string describing the result of the account creation.
      */
     public static String createNewLogin(String username, String password) {
 
@@ -21,6 +23,8 @@ public class Login {
 
     /**
      * This method verifies the login information entered by the client.
+     *
+     * @return A string describing the result of the login.
      */
     public static String verifyLogin(String username, String password) {
 

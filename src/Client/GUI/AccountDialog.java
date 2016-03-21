@@ -62,7 +62,9 @@ public class AccountDialog extends JDialog {
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     }
 
-    // This method will display the login dialog
+    /**
+     * Callback for when the cancel button is clicked. Returns to the login dialog.
+     */
     private void onCancel() {
         theFrame.setTitle("Welcome to War!");
         theFrame.setContentPane(lDialog.getContentPane());

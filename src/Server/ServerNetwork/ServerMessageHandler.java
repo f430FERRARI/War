@@ -22,7 +22,7 @@ public class ServerMessageHandler {
 
         void onReceiveLogin(int id, String loginInfo);
 
-        void onDisconnect(int id);
+        void onPlayerDisconnect(int id);
     }
 
     public interface ChatMessageListener {
@@ -32,9 +32,6 @@ public class ServerMessageHandler {
     }
 
     public interface LobbyMessageListener {
-        void onRequestLobbyList(int id);
-
-        void onClientJoinLobby(int id);
 
         void onClientExitLobby(int id);
 
@@ -79,9 +76,9 @@ public class ServerMessageHandler {
                 adminMessageListener.onReceiveLogin(senderId, loginInfo);
                 break;
 
-            case CommunicationCodes.LOBBY_REQUEST_LISTS:
-                System.out.println("Got request for lobby lists.");
-                lobbyMessageListener.onRequestLobbyList(senderId);
+            case CommunicationCodes.ADMIN_PLAYER_QUIT:
+                System.out.println("Received message. Player wants to quit!");
+                adminMessageListener.onPlayerDisconnect(senderId);
                 break;
 
             case CommunicationCodes.LOBBY_JOIN_GAMELOBBY:
@@ -92,11 +89,6 @@ public class ServerMessageHandler {
             case CommunicationCodes.LOBBY_EXIT_GAMELOBBY:
                 System.out.println("Got message! Client wants to exit game lobby!");
                 lobbyMessageListener.onClientExitGameLobby(senderId);
-                break;
-
-            case CommunicationCodes.LOBBY_EXIT_LOBBY:
-                System.out.println("Got message! Client wants to exit lobby!");
-                lobbyMessageListener.onClientExitLobby(senderId);
                 break;
 
             case CommunicationCodes.LOBBY_JOIN_OBSERVER:

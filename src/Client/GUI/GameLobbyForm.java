@@ -63,6 +63,13 @@ public class GameLobbyForm {
         });
     }
 
+    /**
+     * This method updates all lobby lists.
+     *
+     * @param online The list of names of players in the online list and the in chat list.
+     * @param game The list of names of players in the game lobby list.
+     * @param observers The list of names of players in the observers list.
+     */
     public void updateLobbyLists(ArrayList<String> online, ArrayList<String> game, ArrayList<String> observers) {
         // Clear all the old lists
         onlineListModel.removeAllElements();
@@ -93,7 +100,11 @@ public class GameLobbyForm {
         return this.lobbyPanel;
     }
 
-
+    /**
+     * This method is used to register listeners of this class.
+     *
+     * @param listener A reference to the object that is listening to the class.
+     */
     public void register(Object listener) {
         lobbyGUIListener = (LobbyGUIListener) listener;
     }

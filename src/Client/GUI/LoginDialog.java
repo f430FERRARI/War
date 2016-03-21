@@ -70,6 +70,9 @@ public class LoginDialog extends JDialog {
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     }
 
+    /**
+     * Callback method to when the cancel button is clicked.
+     */
     private void onCancel() {
         dispose();
     }

@@ -75,11 +75,14 @@ public class ClientGameLobby implements GameLobbyForm.LobbyGUIListener, ClientNe
                         break;
                 }
             }
-
             lobbyScreen.updateLobbyLists(lobbyGuysNames, gameGuysNames, observerDudesNames);
         }
     }
 
+    /**
+     * Callback to GameLobbyForm. This is called when the user presses join. Adds the player to the game lobby list by
+     * sending a request to the server.
+     */
     @Override
     public void onClickJoin() {
 
@@ -92,6 +95,10 @@ public class ClientGameLobby implements GameLobbyForm.LobbyGUIListener, ClientNe
         }
     }
 
+    /**
+     * Callback to GameLobbyForm. This is called when the user presses observe. Adds the player to the observer list by
+     * sending a request to the server.
+     */
     @Override
     public void onClickObserve() {
         if (observerList.size() < LOBBY_OBSERVER_CAPACITY) {
@@ -103,35 +110,12 @@ public class ClientGameLobby implements GameLobbyForm.LobbyGUIListener, ClientNe
         }
     }
 
+    /**
+     * Callback to the GameLobbyForm. This is called when the user presses the start button. Starts a game with the
+     * players in the game lobby list by opening the game screen for those in the game lobby list and observer list.
+     */
     @Override
     public void onClickStart() {
-
-    }
-
-    /**
-     * Callback to the communicator. This is called when the player tried to join a lobby that
-     * was full. Displays a lobby full message.
-     */
-    @Override
-    public void onLobbyFull() {
-
-    }
-
-    /**
-     * Callback to the communicator. This is called when the player tried to join a gamelobby that
-     * was full. Displays a gamelobby full message.
-     */
-    @Override
-    public void onGameLobbyFull() {
-
-    }
-
-    /**
-     * Callback to the communicator. This is called when the player tried to join a gamelobby that
-     * was full. Displays a observer lobby full message.
-     */
-    @Override
-    public void onObserverLobbyFull() {
 
     }
 }

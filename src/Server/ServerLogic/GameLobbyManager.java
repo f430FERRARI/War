@@ -26,34 +26,31 @@ public class GameLobbyManager implements ServerNetworkManager.LobbyMessageListen
         networkManager.register(ServerMessageHandler.LISTENER_LOBBY, this);
     }
 
-    @Override
-    public void onRequestLobbyList(int id) {
+    /**
+     * Callback method to Server. This is called when a player joins the general lobby waiting area.
+     *
+     * @param id The id of the player who joined the waiting area.
+     */
+    public void onClientJoinLobby(int id) {
+        lobbyList.add(id);
         sendLobbyLists();
     }
 
     /**
-     * Callback method to the communicator. This is called when a player joins the general lobby waiting area.
-     *
-     * @param id The id of the player who joined the waiting area.
-     */
-    @Override
-    public void onClientJoinLobby(int id) {
-        if (lobbyList.size() < LOBBY_LOBBY_CAPACITY) {
-            lobbyList.add(id);
-            sendLobbyLists();
-        } else {
-            notifyLobbyFull(id);
-        }
-    }
-
-    /**
-     * Callback method to the communicator. This is called when a player exits the general lobby waiting area.
+     * Callback method to Server. This is called when a player exits the general lobby waiting area.
+     * It removes the player from all lists because the user is quitting the game.
      *
      * @param id The id of the player who joined the waiting area.
      */
     @Override
     public void onClientExitLobby(int id) {
         lobbyList.remove(new Integer(id));  // Remove object with id = id
+        if (gameLobbyList.contains(new Integer(id))) {
+            gameLobbyList.remove(new Integer(id));
+        }
+        if (observerList.contains(new Integer(id))) {
+            observerList.remove(new Integer(id));
+        }
         sendLobbyLists();
     }
 
@@ -65,18 +62,14 @@ public class GameLobbyManager implements ServerNetworkManager.LobbyMessageListen
      */
     @Override
     public void onClientJoinGameLobby(int id) {
-        if (gameLobbyList.size() < LOBBY_GAMELOBBY_CAPACITY) {
-            if (!gameLobbyList.contains(new Integer(id))) {
-                gameLobbyList.add(id);
+        if (!gameLobbyList.contains(new Integer(id))) {
+            gameLobbyList.add(id);
 
-                // Remove player from observer list if he's on it
-                if (observerList.contains(new Integer(id))) {
-                    observerList.remove(new Integer(id));
-                }
-                sendLobbyLists();
+            // Remove player from observer list if he's on it
+            if (observerList.contains(new Integer(id))) {
+                observerList.remove(new Integer(id));
             }
-        } else {
-            notifyGameLobbyFull(id);
+            sendLobbyLists();
         }
     }
 
@@ -98,18 +91,14 @@ public class GameLobbyManager implements ServerNetworkManager.LobbyMessageListen
      */
     @Override
     public void onClientJoinObserver(int id) {
-        if (observerList.size() < LOBBY_OBSERVER_CAPACITY) {
-            if (!observerList.contains(new Integer(id))) {
-                observerList.add(id);
+        if (!observerList.contains(new Integer(id))) {
+            observerList.add(id);
 
-                // Remove player from game lobby list if he's on it
-                if (gameLobbyList.contains(new Integer(id))) {
-                    gameLobbyList.remove(new Integer(id));
-                }
-                sendLobbyLists();
+            // Remove player from game lobby list if he's on it
+            if (gameLobbyList.contains(new Integer(id))) {
+                gameLobbyList.remove(new Integer(id));
             }
-        } else {
-            notifyObserverLobbyFull(id);
+            sendLobbyLists();
         }
     }
 
@@ -154,29 +143,6 @@ public class GameLobbyManager implements ServerNetworkManager.LobbyMessageListen
         byte[] message = Utilities.prepareMessage(CommunicationCodes.LOBBY_LISTS_SEND, lists);
         networkManager.sendToAll(message);
     }
-
-
-    /**
-     * This notifies a single player if the lobby is full.
-     */
-    private void notifyLobbyFull(int id) {
-        networkManager.send(id, Utilities.prepareOperationMessage(CommunicationCodes.LOBBY_LOBBY_FULL));
-    }
-
-    /**
-     * This notifies a single player if the game lobby is full.
-     */
-    private void notifyGameLobbyFull(int id) {
-        networkManager.send(id, Utilities.prepareOperationMessage(CommunicationCodes.LOBBY_GAMELOBBY_FULL));
-    }
-
-    /**
-     * This notifies a single player if the observer lobby is full.
-     */
-    private void notifyObserverLobbyFull(int id) {
-        networkManager.send(id, Utilities.prepareOperationMessage(CommunicationCodes.LOBBY_OBSERVER_FULL));
-    }
-
 
     public ArrayList<Integer> getLobbyList() {
         return lobbyList;

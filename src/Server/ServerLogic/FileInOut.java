@@ -51,6 +51,7 @@ public class FileInOut {
     /**
      * Writes a line to a file.
      *
+     * @param filename The name of the file to write to.
      * @param line The line to be written.
      */
     public static void writeToFile(String filename, String line) {
@@ -63,6 +64,11 @@ public class FileInOut {
         }
     }
 
+    /**
+     * Utility for clearing all the entries in a file.
+     *
+     * @param filename The file to be cleared.
+     */
     public static void clearFile(String filename) {
         PrintWriter pw = null;
         try {

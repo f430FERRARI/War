@@ -129,16 +129,13 @@ public class ServerNetworkManager extends ServerMessageHandler implements Connec
         send(id, message);
     }
 
-    public void disconnect(int id) {
+    /**
+     * Callback to Server. Called when a player wants to quit. Disconnects a player from the network.
+     *
+     * @param id The player who wants to quit.
+     */
+    public void onDisconnect(int id) {
         playerConnections.remove(id);
         // TODO: Turn off listening thread
-    }
-
-    private void onIncompletedConnection() {
-        // TODO: Case where a client does not send name
-    }
-
-    public HashMap<Integer, Socket> getPlayerConnections() {
-        return playerConnections;
     }
 }

@@ -38,6 +38,8 @@ public class ClientMessageHandler {
         void onNewPlayerJoined(int id, String name);
 
         void onReceiveIdsAndNames(String idsAndNames);
+
+        void onPlayerRemoved(int id);
     }
 
     public interface ChatMessageListener {
@@ -52,12 +54,6 @@ public class ClientMessageHandler {
 
     public interface LobbyMessageListener {
         void onReceiveLobbyLists(String lists);
-
-        void onLobbyFull();
-
-        void onGameLobbyFull();
-
-        void onObserverLobbyFull();
     }
 
     /**
@@ -102,25 +98,16 @@ public class ClientMessageHandler {
                 adminMessageListener.onNewPlayerJoined(id, name);
                 break;
 
+            case CommunicationCodes.ADMIN_REMOVE_PLAYER:
+                System.out.println("Received message. Player needs to be removed");
+                int toRemove = Utilities.byteArrayToInt(Arrays.copyOfRange(message, 1, 5));
+                adminMessageListener.onPlayerRemoved(toRemove);
+                break;
+
             case CommunicationCodes.LOBBY_LISTS_SEND:
                 System.out.println("Got message! Lobby list changed!");
                 String lists = Utilities.byteArrayToString(Arrays.copyOfRange(message, 1, message.length));
                 lobbyMessageListener.onReceiveLobbyLists(lists);
-                break;
-
-            case CommunicationCodes.LOBBY_LOBBY_FULL:
-                System.out.println("Got message! Lobby full.");
-                lobbyMessageListener.onLobbyFull();
-                break;
-
-            case CommunicationCodes.LOBBY_GAMELOBBY_FULL:
-                System.out.println("Got message! Game lobby full.");
-                lobbyMessageListener.onGameLobbyFull();
-                break;
-
-            case CommunicationCodes.LOBBY_OBSERVER_FULL:
-                System.out.println("Got message! Observer list full!");
-                lobbyMessageListener.onObserverLobbyFull();
                 break;
 
             case CommunicationCodes.CHAT_REDIRECT_IND_MSG:

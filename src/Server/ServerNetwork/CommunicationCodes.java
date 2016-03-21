@@ -4,22 +4,19 @@ public class CommunicationCodes {
 
     // Administration Operation Codes (0x00 - 0x0F)
     public static final byte ADMIN_ASSIGN_ID = 0x0;
+    public static final byte ADMIN_PLAYER_QUIT = 0x1;
     public static final byte ADMIN_UPDATE_PLAYERS = 0x2;
     public static final byte ADMIN_GROUP_INFO = 0x3;
     public static final byte ADMIN_LOGIN_ATTEMPT = 0x4;
     public static final byte ADMIN_LOGIN_RESULT = 0x5;
     public static final byte ADMIN_CREATE_ACCOUNT = 0x6;
     public static final byte ADMIN_CREATE_RESULT = 0x7;
+    public static final byte ADMIN_REMOVE_PLAYER =  0x8;
 
     // Lobby Operation Codes (0x10 - 0x1F)
     public static final byte LOBBY_JOIN_GAMELOBBY = 0x10;
     public static final byte LOBBY_EXIT_GAMELOBBY = 0x11;
-    public static final byte LOBBY_REQUEST_LISTS = 0x12;
-    public static final byte LOBBY_EXIT_LOBBY = 0x13;
     public static final byte LOBBY_LISTS_SEND = 0x14;
-    public static final byte LOBBY_LOBBY_FULL = 0x15;
-    public static final byte LOBBY_GAMELOBBY_FULL = 0x16;
-    public static final byte LOBBY_OBSERVER_FULL = 0x17;
     public static final byte LOBBY_JOIN_OBSERVER = 0x18;
     public static final byte LOBBY_EXIT_OBSERVER = 0x19;
 
