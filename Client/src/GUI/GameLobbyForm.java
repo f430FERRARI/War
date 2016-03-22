@@ -15,13 +15,13 @@ public class GameLobbyForm {
     private JList playerList;
     private JList observerList;
     private JList inChatList;
-    private JTabbedPane chatWindows;
     private JPanel lobbyPanel;
-    private JTextField messageField;
     private JButton sendButton;
     private JLabel gameLobbyLabel;
-    private JTextArea publicChatArea;
-    private JTextArea privateChatArea;
+    private JPanel Chat;
+    private JTextField messageField;
+    private JButton leaveButton;
+    private JButton startGameButton;
 
     private DefaultListModel onlineListModel, playerListModel, observerListModel;
 
