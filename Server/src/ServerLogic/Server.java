@@ -6,6 +6,7 @@ import ServerNetwork.ServerNetworkManager;
 
 import java.util.HashMap;
 
+// TODO: Bug- Server login, client login, quit, login same account
 // TODO: Create file on first run
 // TODO: Change int ids to bytes
 public class Server implements ServerNetworkManager.AdminMessageListener {

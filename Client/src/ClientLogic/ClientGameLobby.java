@@ -22,12 +22,18 @@ public class ClientGameLobby implements GameLobbyForm.LobbyGUIListener, ClientNe
     private ArrayList<Integer> observerList = new ArrayList<>();
 
     private Client client;
+    private ClientGameLobbyListener listener;
     private ClientNetworkManager networkManager;
 
     private GameLobbyForm lobbyScreen;
 
+    public interface ClientGameLobbyListener {
+        void onClickStartGame(ArrayList<Integer> gamers);
+    }
+
     public ClientGameLobby(Client client, GameLobbyForm gameLobbyForm) {
         this.client = client;
+        this.listener = client;
         this.lobbyScreen = gameLobbyForm;
         this.networkManager = ClientNetworkManager.getInstance();
         networkManager.register(ClientMessageHandler.LISTENER_LOBBY, this);
@@ -116,6 +122,9 @@ public class ClientGameLobby implements GameLobbyForm.LobbyGUIListener, ClientNe
      */
     @Override
     public void onClickStart() {
-
+        byte[] message = Utilities.prepareOperationMessage(CommunicationCodes.GAME_REQUEST_START, client.getMe().getId());
+        networkManager.send(message);
+        listener.onClickStartGame(gameLobbyList);
+        // TODO: Add observers
     }
 }

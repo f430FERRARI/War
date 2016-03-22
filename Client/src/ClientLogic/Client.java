@@ -4,15 +4,17 @@ import ClientNetwork.ClientMessageHandler;
 import ClientNetwork.ClientNetworkManager;
 import ClientNetwork.CommunicationCodes;
 import GUI.AccountDialog;
+import GUI.GameForm;
 import GUI.GameLobbyForm;
 import GUI.LoginDialog;
 
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 
-public class Client implements LoginDialog.LoginDialogListener, AccountDialog.AccountDialogListener, ClientNetworkManager.AdminMessageListener {
+public class Client implements LoginDialog.LoginDialogListener, AccountDialog.AccountDialogListener, ClientNetworkManager.AdminMessageListener, ClientGameLobby.ClientGameLobbyListener {
 
     private Player me;
     private HashMap<Integer, Player> playerList = new HashMap<>();
@@ -26,6 +28,7 @@ public class Client implements LoginDialog.LoginDialogListener, AccountDialog.Ac
     private LoginDialog lDialog;
     private AccountDialog accountDialog;
     private GameLobbyForm gameLobbyForm;
+    private GameForm gameForm;
 
     public Client() {
         // Create an empty player object
@@ -56,9 +59,11 @@ public class Client implements LoginDialog.LoginDialogListener, AccountDialog.Ac
         // Initiate the other GUI windows
         lDialog = new LoginDialog(this, theFrame);
         gameLobbyForm = new GameLobbyForm();
+        gameForm = new GameForm();
 
         // Create the remaining system components
         lobby = new ClientGameLobby(this, gameLobbyForm);
+        game = new ClientGameLogic(this, gameForm);   // TODO: Change this
 
         // Make login dialog visible
         theFrame.setContentPane(lDialog.getContentPane());
@@ -230,6 +235,26 @@ public class Client implements LoginDialog.LoginDialogListener, AccountDialog.Ac
     @Override
     public void onPlayerRemoved(int id) {
         playerList.remove(id);
+    }
+
+    /**
+     * Callback to ClientGameLobby. This is called when the player clicks start game.
+     *
+     * @param gamers
+     */
+    @Override
+    public void onClickStartGame(ArrayList<Integer> gamers) {
+        game.setPlayerList(gamers);
+        startGame();
+    }
+
+    private void startGame() {
+        System.out.println("Switching to game screen");
+        theFrame.setContentPane(gameForm.getContentPane());
+        theFrame.setLocationRelativeTo(null);
+        theFrame.pack();
+        theFrame.setVisible(true);
+        accountDialog.dispose();
     }
 
     public Player getMe() {

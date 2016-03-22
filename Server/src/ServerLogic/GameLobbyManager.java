@@ -114,6 +114,16 @@ public class GameLobbyManager implements ServerNetworkManager.LobbyMessageListen
     }
 
     /**
+     * Callback to the communicator. This is called when a player requested a game start.
+     * @param id
+     */
+    @Override
+    public void onReceiveGameStart(int id) {
+        byte[] message = Utilities.prepareOperationMessage(CommunicationCodes.GAME_START);
+        networkManager.sendToAllButOne(id, message);
+    }
+
+    /**
      * This method notifies all players about a change in the lobby lists. It sends a string with the id of the players
      * in each list.
      */

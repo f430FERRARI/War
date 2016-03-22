@@ -16,8 +16,13 @@ public class GameForm {
     private JButton pauseButton;
     private JButton quitButton;
     private JPanel Chat;
+    private JPanel gamePanel;
 
     private void createUIComponents() {
         // TODO: place custom component creation code here
+    }
+
+    public JPanel getContentPane() {
+        return gamePanel;
     }
 }
