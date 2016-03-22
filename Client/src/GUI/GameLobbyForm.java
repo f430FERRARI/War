@@ -61,6 +61,13 @@ public class GameLobbyForm {
 
             }
         });
+
+        startGameButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) { lobbyGUIListener.onClickStart(); } {
+
+            }
+        });
     }
 
     /**

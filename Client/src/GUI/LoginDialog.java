@@ -13,7 +13,6 @@ public class LoginDialog extends JDialog {
     private JFrame theFrame;
     private JPanel contentPane;
     private JButton loginButton;
-    private JButton buttonCancel;
     private JButton createNewAccountButton;
     private JTextField usernameField;
     private JPasswordField passwordField;
@@ -50,12 +49,8 @@ public class LoginDialog extends JDialog {
 
 
         // call onCancel() when cross is clicked
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                onCancel();
-            }
-        });
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
 
         // call onCancel() on ESCAPE
         contentPane.registerKeyboardAction(new ActionListener() {
