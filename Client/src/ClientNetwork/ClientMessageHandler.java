@@ -48,10 +48,6 @@ public class ClientMessageHandler {
         void onClientRcvIndvMsg(int id, String text);
 
         void onClientRcvGrpMsg(int id, String text);
-
-        void onSuccessfulChatroomEntry();
-
-        void onCSuccessfulChatroomExit();
     }
 
     public interface LobbyMessageListener {

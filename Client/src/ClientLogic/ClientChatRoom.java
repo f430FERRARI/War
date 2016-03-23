@@ -3,87 +3,70 @@ package ClientLogic;
 import ClientNetwork.ClientMessageHandler;
 import ClientNetwork.ClientNetworkManager;
 import ClientNetwork.CommunicationCodes;
+import GUI.GameLobbyForm;
 
-import java.util.Scanner;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.ArrayList;
 
-public class ClientChatRoom implements ClientNetworkManager.ChatMessageListener {
+public class ClientChatRoom implements ClientNetworkManager.ChatMessageListener, ChatListener, ClientGameLobby.ChatListListener {
+
+    public static final int CHATROOM_GRP_MSG = 0;
+    public static final int CHATROOM_IND_MSG = 1;
 
     private Client client;
-    private boolean inChat = false;
+    private GameLobbyForm chatRoom;  // TODO: Generalize to chat gui
     private ClientNetworkManager networkManager;
 
-    public ClientChatRoom(Client client) {
+    private ArrayList<Integer> inChat = new ArrayList<>();
+
+    public ClientChatRoom(Client client, GameLobbyForm lobbyScreen) {
         this.client = client;
+        this.chatRoom = lobbyScreen;
+        lobbyScreen.register(GameLobbyForm.LISTENER_CHAT, this);
         this.networkManager = ClientNetworkManager.getInstance();
         networkManager.register(ClientMessageHandler.LISTENER_CHAT, this);
     }
 
-    public void startChatRoom() {
-        inChat = true;
-        System.out.println("Welcome to the chat room!");
-        runChat();
+    @Override
+    public void onLobbyListUpdates(ArrayList<Integer> inChat) {
+        this.inChat = inChat;
     }
 
-    private void runChat() {
-        // Create a thread for sending messages
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
-        try {
-            executorService.submit(new Callable() {
-                @Override
-                public Object call() throws Exception {
+    @Override
+    public void onClickSendMsg(int type, int destUser, String msg) {
+        System.out.println("Will send message");
 
-                    // Create a scanner so we can read the command-line input
-                    Scanner scanner = new Scanner(System.in);
+        byte[] textBytes = Utilities.stringToByteArray(msg);
+        if (type == CHATROOM_IND_MSG && destUser != -1) {
 
-                    while (inChat) {
-//                        System.out.println("WHERE: ");
-//                        String destination = scanner.next().trim();
-//                        int destID = client.getPlayerList().get(destination).getId();
+            // Put message onto the message area
+            chatRoom.updateChatArea(CHATROOM_IND_MSG, client.getMe().getName(), msg);
 
-                        // get their input as a String
-                        System.out.println("Write your message: ");
-                        String text = scanner.next();
-                        byte[] destIDBytes = Utilities.intToByteArray(2);  // TODO: FOR DEBUG
-                        byte[] textBytes = Utilities.stringToByteArray(text);
-                        byte[] payload = Utilities.appendByteArrays(destIDBytes, textBytes);
-                        networkManager.send(Utilities.prepareMessage(CommunicationCodes.CHAT_SEND_IND_MSG, client.getMe().
-                                getId(), payload));
-                    }
+            // Send the message to the individual
+            int destId = inChat.get(destUser);
+            byte[] destIdBytes = Utilities.intToByteArray(destId);
+            byte[] payload = Utilities.appendByteArrays(destIdBytes, textBytes);
+            byte[] message = Utilities.prepareMessage(CommunicationCodes.CHAT_SEND_IND_MSG, client.getMe().getId(), payload);
+            networkManager.send(message);
 
-                    return -1;
-                }
-            });
-        } catch (Exception exp) {
-            exp.printStackTrace();
-        } finally {
-            executorService.shutdownNow();
+        } else if (type == CHATROOM_GRP_MSG) {
+
+            // Put message onto the message area
+            chatRoom.updateChatArea(CHATROOM_GRP_MSG, client.getMe().getName(), msg);
+
+            // Send the message to the group
+            byte[] message = Utilities.prepareMessage(CommunicationCodes.CHAT_SEND_GRP_MSG, client.getMe().getId(), textBytes);
+            networkManager.send(message);
         }
     }
 
     @Override
-    public void onClientRcvIndvMsg(int id, String text) {
-
+    public void onClientRcvIndvMsg(int senderId, String text) {
+        chatRoom.updateChatArea(CHATROOM_IND_MSG, client.getPlayerList().get(senderId).getName(), text);
     }
 
     @Override
-    public void onClientRcvGrpMsg(int id, String text) {
+    public void onClientRcvGrpMsg(int senderId, String text) {
+        chatRoom.updateChatArea(CHATROOM_GRP_MSG, client.getPlayerList().get(senderId).getName(), text);
 
-    }
-
-    @Override
-    public void onSuccessfulChatroomEntry() {
-
-    }
-
-    @Override
-    public void onCSuccessfulChatroomExit() {
-
-    }
-
-    public void setInChat(boolean inChat) {
-        this.inChat = inChat;
     }
 }

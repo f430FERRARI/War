@@ -3,7 +3,8 @@ package ServerLogic;
 public class Player {
 
 	private int id; 
-	private String name;  
+	private String name;
+	private boolean inGame;
 	private int score;  
 
 	public Player(int id) {
@@ -24,6 +25,14 @@ public class Player {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public boolean isInGame() {
+		return inGame;
+	}
+
+	public void setInGame(boolean inGame) {
+		this.inGame = inGame;
 	}
 
 	public int getScore() {

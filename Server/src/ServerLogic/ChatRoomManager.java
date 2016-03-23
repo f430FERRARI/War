@@ -6,6 +6,9 @@ import ServerNetwork.ServerNetworkManager;
 
 public class ChatRoomManager implements ServerNetworkManager.ChatMessageListener {
 
+    public static final int CHATROOM_GRP_MSG = 1;
+    public static final int CHATROOM_IND_MSG = 2;
+
     private ServerNetworkManager networkManager;
 
     public ChatRoomManager() {

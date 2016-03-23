@@ -22,7 +22,8 @@ public class ClientGameLobby implements GameLobbyForm.LobbyGUIListener, ClientNe
     private ArrayList<Integer> observerList = new ArrayList<>();
 
     private Client client;
-    private ClientGameLobbyListener listener;
+    private ClientGameLobbyListener lobbyListener;
+    private ChatListListener chatListListener;
     private ClientNetworkManager networkManager;
 
     private GameLobbyForm lobbyScreen;
@@ -31,13 +32,18 @@ public class ClientGameLobby implements GameLobbyForm.LobbyGUIListener, ClientNe
         void onStartGame(ArrayList<Integer> gamers);
     }
 
-    public ClientGameLobby(Client client, GameLobbyForm gameLobbyForm) {
+    public interface ChatListListener {
+        void onLobbyListUpdates(ArrayList<Integer> inChat);
+    }
+
+    public ClientGameLobby(Client client, GameLobbyForm gameLobbyForm, ChatListListener chatRoom) {
         this.client = client;
-        this.listener = client;
+        this.lobbyListener = client;
+        this.chatListListener = chatRoom;
         this.lobbyScreen = gameLobbyForm;
         this.networkManager = ClientNetworkManager.getInstance();
         networkManager.register(ClientMessageHandler.LISTENER_LOBBY, this);
-        lobbyScreen.register(this);
+        lobbyScreen.register(GameLobbyForm.LISTENER_LOBBY, this); // TODO: Chat
     }
 
     /**
@@ -81,6 +87,8 @@ public class ClientGameLobby implements GameLobbyForm.LobbyGUIListener, ClientNe
                         break;
                 }
             }
+
+            chatListListener.onLobbyListUpdates(lobbyList);
             lobbyScreen.updateLobbyLists(lobbyGuysNames, gameGuysNames, observerDudesNames);
         }
     }
@@ -125,7 +133,7 @@ public class ClientGameLobby implements GameLobbyForm.LobbyGUIListener, ClientNe
         System.out.println("Heard the start game click!");
         byte[] message = Utilities.prepareOperationMessage(CommunicationCodes.LOBBY_REQUEST_GAMESTART, client.getMe().getId());
         networkManager.send(message);
-        listener.onStartGame(gameLobbyList); // TODO: Add observers
+        lobbyListener.onStartGame(gameLobbyList); // TODO: Add observers
     }
 
     /**
@@ -133,6 +141,6 @@ public class ClientGameLobby implements GameLobbyForm.LobbyGUIListener, ClientNe
      */
     @Override
     public void onReceiveGameStart() {
-        listener.onStartGame(gameLobbyList); // TODO: Add observers
+        lobbyListener.onStartGame(gameLobbyList); // TODO: Add observers
     }
 }

@@ -5,7 +5,8 @@ import java.util.ArrayList;
 public class Player {
 
 	private int id; 
-	private String name;  
+	private String name;
+	private boolean inGame;
 	private int score;  
 	private ArrayList<Integer> cards;
 
@@ -23,6 +24,14 @@ public class Player {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public boolean isInGame() {
+		return inGame;
+	}
+
+	public void setInGame(boolean inGame) {
+		this.inGame = inGame;
 	}
 
 	public int getScore() {

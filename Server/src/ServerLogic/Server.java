@@ -7,6 +7,7 @@ import ServerNetwork.ServerNetworkManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+// TODO: Create modular client chat room
 // TODO: Bug- Server login, client login, quit, login same account
 // TODO: Create file on first run
 // TODO: Change int ids to bytes

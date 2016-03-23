@@ -62,8 +62,9 @@ public class Client implements LoginDialog.LoginDialogListener, AccountDialog.Ac
         gameForm = new GameForm();
 
         // Create the remaining system components
-        lobby = new ClientGameLobby(this, gameLobbyForm);
         game = new ClientGameLogic(this, gameForm);   // TODO: Change this
+        chatRoom = new ClientChatRoom(this, gameLobbyForm);
+        lobby = new ClientGameLobby(this, gameLobbyForm, chatRoom);
 
         // Make login dialog visible
         theFrame.setContentPane(lDialog.getContentPane());
