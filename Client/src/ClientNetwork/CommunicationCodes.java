@@ -17,6 +17,8 @@ public class CommunicationCodes {
     public static final byte LOBBY_JOIN_GAMELOBBY = 0x10;
     public static final byte LOBBY_EXIT_GAMELOBBY = 0x11;
     public static final byte LOBBY_LISTS_SEND = 0x14;
+    public static final byte LOBBY_REQUEST_GAMESTART = 0x15;
+    public static final byte LOBBY_GAME_START = 0x16;
     public static final byte LOBBY_JOIN_OBSERVER = 0x18;
     public static final byte LOBBY_EXIT_OBSERVER = 0x19;
 
@@ -27,7 +29,11 @@ public class CommunicationCodes {
     public static final byte CHAT_REDIRECT_GRP_MSG = 0x23;
 
     // Gameplay Operation Codes (0x30 - 0x3F)
-    public static final byte GAME_REQUEST_START = 0x30;
-    public static final byte GAME_START = 0x31;
+    public static final byte GAME_REQUEST_DRAW = 0x30;
+    public static final byte GAME_DRAW = 0x31;
+    public static final byte GAME_REQUEST_PAUSE = 0x32;
+    public static final byte GAME_PAUSE = 0x33;
+    public static final byte GAME_REQUEST_UNPAUSE = 0x34;
+    public static final byte GAME_UNPAUSE = 0x35;
 
 }

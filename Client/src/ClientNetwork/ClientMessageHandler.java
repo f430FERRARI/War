@@ -56,6 +56,8 @@ public class ClientMessageHandler {
 
     public interface LobbyMessageListener {
         void onReceiveLobbyLists(String lists);
+
+        void onReceiveGameStart();
     }
 
     /**
@@ -112,6 +114,11 @@ public class ClientMessageHandler {
                 lobbyMessageListener.onReceiveLobbyLists(lists);
                 break;
 
+            case CommunicationCodes.LOBBY_GAME_START:
+                System.out.println("Received message! Game start.");
+                lobbyMessageListener.onReceiveGameStart();
+                break;
+
             case CommunicationCodes.CHAT_REDIRECT_IND_MSG:
                 System.out.println("Got individual chat message from other guy.");
                 int senderID1 = byteArrayToInt(Arrays.copyOfRange(message, 1, 5));
@@ -125,6 +132,7 @@ public class ClientMessageHandler {
                 String text2 = Utilities.byteArrayToString(Arrays.copyOfRange(message, 5, message.length));
                 chatMessageListener.onClientRcvGrpMsg(senderID2, text2);
                 break;
+
         }
     }
 

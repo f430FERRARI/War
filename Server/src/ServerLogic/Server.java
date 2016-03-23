@@ -4,12 +4,13 @@ import ServerNetwork.CommunicationCodes;
 import ServerNetwork.ServerMessageHandler;
 import ServerNetwork.ServerNetworkManager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 // TODO: Bug- Server login, client login, quit, login same account
 // TODO: Create file on first run
 // TODO: Change int ids to bytes
-public class Server implements ServerNetworkManager.AdminMessageListener {
+public class Server implements ServerNetworkManager.AdminMessageListener, GameLobbyManager.LobbyManagerListener {
 
     private HashMap<Integer, Player> playerList = new HashMap<>();
     private ServerNetworkManager networkManager;
@@ -20,8 +21,8 @@ public class Server implements ServerNetworkManager.AdminMessageListener {
     public Server() {
         // Create system components
         chatRoomManager = new ChatRoomManager();
-        gameLobbyManager = new GameLobbyManager();
-//        serverGameManager = new ServerGameManager();
+        gameLobbyManager = new GameLobbyManager(this);
+        serverGameManager = new ServerGameManager();
 
         // Start the server network and register this class as a listener
         networkManager = ServerNetworkManager.getInstance();
@@ -36,7 +37,7 @@ public class Server implements ServerNetworkManager.AdminMessageListener {
      */
     @Override
     public void onPlayerDisconnect(int id) {
-
+        System.out.println("This guy is quitting: " + playerList.get(id).getName());
         networkManager.onDisconnect(id);        // Shut down player network connection
         playerList.remove(id);                  // Remove player from the playerlist
         gameLobbyManager.onClientExitLobby(id); // Remove player from the lobbies
@@ -115,6 +116,17 @@ public class Server implements ServerNetworkManager.AdminMessageListener {
     }
 
     /**
+     * Callback to GameLobbyManager. This is called when a player starts the game.
+     *
+     * @param players The player ids of the players who are going to play the game.
+     */
+    @Override
+    public void onStartGame(ArrayList<Integer> players) {
+        serverGameManager.setPlayers(players);
+        System.out.println("Game set.");
+    }
+
+    /**
      * A helper method that adds the player to the system by sending them system info and putting them into the
      * player list.
      *
@@ -147,7 +159,7 @@ public class Server implements ServerNetworkManager.AdminMessageListener {
 
         // Add the player to the playerlist and the lobby
         playerList.put(id, newPlayer);
-        gameLobbyManager.onClientJoinLobby(id);  // TODO: this changed first
+        gameLobbyManager.onClientJoinLobby(id);
     }
 
     public static void main(String[] args) {

@@ -28,7 +28,7 @@ public class ClientGameLobby implements GameLobbyForm.LobbyGUIListener, ClientNe
     private GameLobbyForm lobbyScreen;
 
     public interface ClientGameLobbyListener {
-        void onClickStartGame(ArrayList<Integer> gamers);
+        void onStartGame(ArrayList<Integer> gamers);
     }
 
     public ClientGameLobby(Client client, GameLobbyForm gameLobbyForm) {
@@ -122,9 +122,17 @@ public class ClientGameLobby implements GameLobbyForm.LobbyGUIListener, ClientNe
      */
     @Override
     public void onClickStart() {
-        byte[] message = Utilities.prepareOperationMessage(CommunicationCodes.GAME_REQUEST_START, client.getMe().getId());
+        System.out.println("Heard the start game click!");
+        byte[] message = Utilities.prepareOperationMessage(CommunicationCodes.LOBBY_REQUEST_GAMESTART, client.getMe().getId());
         networkManager.send(message);
-        listener.onClickStartGame(gameLobbyList);
-        // TODO: Add observers
+        listener.onStartGame(gameLobbyList); // TODO: Add observers
+    }
+
+    /**
+     * Callback to the communicator. This is called when the user receives a message that somebody has started the game.
+     */
+    @Override
+    public void onReceiveGameStart() {
+        listener.onStartGame(gameLobbyList); // TODO: Add observers
     }
 }

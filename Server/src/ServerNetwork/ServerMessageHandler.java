@@ -103,6 +103,11 @@ public class ServerMessageHandler {
                 lobbyMessageListener.onClientExitObserver(senderId);
                 break;
 
+            case CommunicationCodes.LOBBY_REQUEST_GAMESTART:
+                System.out.println("Received message. Player wants to start game.");
+                senderId = getSenderId(message);
+                lobbyMessageListener.onReceiveGameStart(senderId);
+
             case CommunicationCodes.CHAT_SEND_IND_MSG:
                 System.out.println("Got client chat message!");
                 byte[] senderIDBytes1 = Arrays.copyOfRange(message, 1, 5);
@@ -118,11 +123,6 @@ public class ServerMessageHandler {
                 byte[] text2 = Arrays.copyOfRange(message, 5, message.length);
                 chatMessageListener.onServerRcvGrpMsg(senderID2, senderIDBytes2, text2);
                 break;
-
-            case CommunicationCodes.GAME_REQUEST_START:
-                System.out.println("Received message. Player wants to start game.");
-                senderId = getSenderId(message);
-                lobbyMessageListener.onReceiveGameStart(senderId);
         }
     }
 

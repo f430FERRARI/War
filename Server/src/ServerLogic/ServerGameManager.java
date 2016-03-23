@@ -10,21 +10,27 @@ import java.util.concurrent.ThreadLocalRandom;
 public class ServerGameManager implements ServerMessageHandler.GameMessageListener {
 
     private int[] cards;
+    private ArrayList<Integer> players;
     private int playerCount;
-    private ArrayList<Player> players;
-    private ArrayList<ArrayList<Integer>> playerCards;
+    private ArrayList<ArrayList<Integer>> playerCards = new ArrayList<>();
+    private ServerNetworkManager networkManager;
 
-    public ServerGameManager(ArrayList<Player> players) {
-        this.players = players;
-        this.playerCount = players.size();
-        this.playerCards = new ArrayList<>();
-        ServerNetworkManager.getInstance().register(ServerMessageHandler.LISTENER_GAME, this);
+    public ServerGameManager() {
+        this.networkManager = ServerNetworkManager.getInstance();
+        networkManager.register(ServerMessageHandler.LISTENER_GAME, this);
+    }
+
+    public void setPlayers(ArrayList<Integer> playerIds) {
+        players = playerIds;
     }
 
     /**
      * This method starts a new game. It resets everyone's score, shuffle's the deck and distributes the cards to each player.
      */
     public void startNewGame() {
+
+        // Set player count
+        playerCount = players.size();
 
         // Create a deck of cards
         cards = new int[52];
@@ -108,22 +114,5 @@ public class ServerGameManager implements ServerMessageHandler.GameMessageListen
             ar[index] = ar[i];
             ar[i] = a;
         }
-    }
-
-    public static void main(String[] args) {
-        Player player1 = new Player(1);
-        Player player2 = new Player(2);
-        Player player3 = new Player(3);
-        Player player4 = new Player(4);
-
-        ArrayList<Player> players = new ArrayList<>();
-        players.add(player1);
-        players.add(player2);
-        players.add(player3);
-        players.add(player4);
-
-        ServerGameManager manager = new ServerGameManager(players);
-        manager.startNewGame();
-        System.out.println("Stop");
     }
 }

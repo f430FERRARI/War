@@ -21,7 +21,14 @@ public class GameLobbyManager implements ServerNetworkManager.LobbyMessageListen
     private ArrayList<Integer> gameLobbyList = new ArrayList<>();
     private ArrayList<Integer> observerList = new ArrayList<>();
 
-    public GameLobbyManager() {
+    private LobbyManagerListener listener;
+
+    public interface LobbyManagerListener {
+        void onStartGame(ArrayList<Integer> players);
+    }
+
+    public GameLobbyManager(LobbyManagerListener listener) {
+        this.listener = listener;
         this.networkManager = ServerNetworkManager.getInstance();
         networkManager.register(ServerMessageHandler.LISTENER_LOBBY, this);
     }
@@ -114,13 +121,22 @@ public class GameLobbyManager implements ServerNetworkManager.LobbyMessageListen
     }
 
     /**
-     * Callback to the communicator. This is called when a player requested a game start.
-     * @param id
+     * Callback to the communicator. This is called when a player requested a game start. Prompts all other
+     * players in the game lobby list and the observer list to start game.
+     *
+     * @param id The id of the player who pressed start.
      */
     @Override
     public void onReceiveGameStart(int id) {
-        byte[] message = Utilities.prepareOperationMessage(CommunicationCodes.GAME_START);
-        networkManager.sendToAllButOne(id, message);
+        byte[] message = Utilities.prepareOperationMessage(CommunicationCodes.LOBBY_GAME_START);
+
+        // Send a game start message to all those in the game lobby list
+        for (int player : gameLobbyList) {
+            if (player != id) {
+                networkManager.send(player, message);
+            }
+        }
+        listener.onStartGame(gameLobbyList); // TODO: Add observers
     }
 
     /**
@@ -158,22 +174,4 @@ public class GameLobbyManager implements ServerNetworkManager.LobbyMessageListen
         return lobbyList;
     }
 
-    // For debug
-    public static void main(String[] args) {
-        GameLobbyManager gameLobbyManager = new GameLobbyManager();
-        gameLobbyManager.onClientJoinGameLobby(2);
-        gameLobbyManager.onClientJoinGameLobby(3);
-        gameLobbyManager.onClientJoinGameLobby(4);
-        gameLobbyManager.onClientExitGameLobby(3);
-
-        gameLobbyManager.onClientJoinLobby(2);
-        gameLobbyManager.onClientJoinLobby(3);
-        gameLobbyManager.onClientJoinLobby(4);
-        gameLobbyManager.onClientExitLobby(3);
-
-        gameLobbyManager.onClientJoinObserver(5);
-        gameLobbyManager.onClientJoinObserver(6);
-        gameLobbyManager.onClientJoinObserver(5);
-        gameLobbyManager.onClientExitLobby(6);
-    }
 }

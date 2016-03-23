@@ -192,7 +192,7 @@ public class Client implements LoginDialog.LoginDialogListener, AccountDialog.Ac
      * Callback to the communicator. This is called when a the client receives a message about a new player including
      * themselves joining the system. Creates a new player object and adds it to the list.
      *
-     * @param id The id of the new player.
+     * @param id   The id of the new player.
      * @param name The name of the new player.
      */
     @Override
@@ -243,18 +243,15 @@ public class Client implements LoginDialog.LoginDialogListener, AccountDialog.Ac
      * @param gamers
      */
     @Override
-    public void onClickStartGame(ArrayList<Integer> gamers) {
-        game.setPlayerList(gamers);
-        startGame();
-    }
-
-    private void startGame() {
+    public void onStartGame(ArrayList<Integer> gamers) {
         System.out.println("Switching to game screen");
+        game.setPlayerList(gamers);
+
+        // Switch the game screen
         theFrame.setContentPane(gameForm.getContentPane());
         theFrame.setLocationRelativeTo(null);
         theFrame.pack();
         theFrame.setVisible(true);
-        accountDialog.dispose();
     }
 
     public Player getMe() {

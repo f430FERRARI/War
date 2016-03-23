@@ -2,6 +2,7 @@ package ClientLogic;
 
 import ClientNetwork.ClientMessageHandler;
 import ClientNetwork.ClientNetworkManager;
+import ClientNetwork.CommunicationCodes;
 import GUI.GameForm;
 
 import java.util.ArrayList;
@@ -43,8 +44,8 @@ public class ClientGameLogic implements ClientNetworkManager.GameMessageListener
      */
     public void draw() {
         // Send draw to the server
-//        byte[] message = Utilities.prepareOperationMessage(CommunicationCodes.GAME_DRAW, client.getMe().getId());
-//        networkManager.send(message);
+        byte[] message = Utilities.prepareOperationMessage(CommunicationCodes.GAME_REQUEST_DRAW, client.getMe().getId());
+        networkManager.send(message);
     }
 
     /**
@@ -61,14 +62,14 @@ public class ClientGameLogic implements ClientNetworkManager.GameMessageListener
      */
     public void pause() {
         // Send pause to the server
-//        byte[] message = Utilities.prepareOperationMessage(CommunicationCodes.GAME_REQUEST_PAUSE, client.getMe().getId());
-//        networkManager.send(message);
+        byte[] message = Utilities.prepareOperationMessage(CommunicationCodes.GAME_REQUEST_PAUSE, client.getMe().getId());
+        networkManager.send(message);
     }
 
     public void unPause() {
         // Send unpause to the server
-//        byte[] message = Utilities.prepareOperationMessage(CommunicationCodes.GAME_REQUEST_UNPAUSE, client.getMe().getId());
-//        networkManager.send(message);
+        byte[] message = Utilities.prepareOperationMessage(CommunicationCodes.GAME_REQUEST_UNPAUSE, client.getMe().getId());
+        networkManager.send(message);
     }
 
     /**
