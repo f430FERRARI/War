@@ -85,7 +85,10 @@ public class ClientGameLogic implements ClientNetworkManager.GameMessageListener
     }
 
     @Override
-    public void onBeginRound() {
+    public void onBeginRound(int round) {
+        String roundLabel = "Round # " + round;
+        gameScreen.setRoundLabel(roundLabel);
+
 
     }
 

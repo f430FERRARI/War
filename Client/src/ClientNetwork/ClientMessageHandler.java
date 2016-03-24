@@ -21,7 +21,7 @@ public class ClientMessageHandler {
     public interface GameMessageListener {
         void onBeginGame();
 
-        void onBeginRound();
+        void onBeginRound(int round);
 
         void onRoundEnd();
 
@@ -127,6 +127,11 @@ public class ClientMessageHandler {
                 int senderID2 = byteArrayToInt(Arrays.copyOfRange(message, 1, 5));
                 String text2 = Utilities.byteArrayToString(Arrays.copyOfRange(message, 5, message.length));
                 chatMessageListener.onClientRcvGrpMsg(senderID2, text2);
+                break;
+            case CommunicationCodes.GAME_REQUEST_DRAW:
+                System.out.println("Please Draw!");
+                int roundNumber = byteArrayToInt(Arrays.copyOfRange(message, 1, 5));
+                gameMessageListener.onBeginRound(roundNumber);
                 break;
 
         }

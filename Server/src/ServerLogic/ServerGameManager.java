@@ -1,5 +1,6 @@
 package ServerLogic;
 
+import ServerNetwork.CommunicationCodes;
 import ServerNetwork.ServerMessageHandler;
 import ServerNetwork.ServerNetworkManager;
 
@@ -14,6 +15,7 @@ public class ServerGameManager implements ServerMessageHandler.GameMessageListen
     private int playerCount;
     private ArrayList<ArrayList<Integer>> playerCards = new ArrayList<>();
     private ServerNetworkManager networkManager;
+    private int roundNumber;
 
     public ServerGameManager() {
         this.networkManager = ServerNetworkManager.getInstance();
@@ -28,7 +30,7 @@ public class ServerGameManager implements ServerMessageHandler.GameMessageListen
      * This method starts a new game. It resets everyone's score, shuffle's the deck and distributes the cards to each player.
      */
     public void startNewGame() {
-
+        roundNumber = 0;
         // Set player count
         playerCount = players.size();
 
@@ -64,6 +66,14 @@ public class ServerGameManager implements ServerMessageHandler.GameMessageListen
      */
     public void initiateRound() {
         // Prompt user to press draw
+        if (playerCards.get(0).isEmpty()) { // check if deck is empty
+            endGame();
+        } else {
+            roundNumber++;
+            byte[] round = Utilities.intToByteArray(roundNumber);
+            byte[] message = Utilities.prepareMessage(CommunicationCodes.GAME_REQUEST_DRAW, round);
+            networkManager.sendToAll(message);
+        }
     }
 
     /**

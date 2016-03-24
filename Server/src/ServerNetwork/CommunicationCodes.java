@@ -29,6 +29,12 @@ public class CommunicationCodes {
     public static final byte CHAT_REDIRECT_GRP_MSG = 0x23;
 
     // Gameplay Operation Codes (0x30 - 0x3F)
+    public static final byte GAME_REQUEST_DRAW = 0x30;
+    public static final byte GAME_DRAW = 0x31;
+    public static final byte GAME_REQUEST_PAUSE = 0x32;
+    public static final byte GAME_PAUSE = 0x33;
+    public static final byte GAME_REQUEST_UNPAUSE = 0x34;
+    public static final byte GAME_UNPAUSE = 0x35;
 
 
 }

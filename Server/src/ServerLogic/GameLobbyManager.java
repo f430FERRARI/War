@@ -129,7 +129,7 @@ public class GameLobbyManager implements ServerNetworkManager.LobbyMessageListen
     @Override
     public void onReceiveGameStart(int id) {
         byte[] message = Utilities.prepareOperationMessage(CommunicationCodes.LOBBY_GAME_START);
-
+        System.out.println("Game Starting...");
         // Send a game start message to all those in the game lobby list
         for (int player : gameLobbyList) {
             if (player != id) {

@@ -20,6 +20,7 @@ public class Server implements ServerNetworkManager.AdminMessageListener, GameLo
     private ServerGameManager serverGameManager;
 
     public Server() {
+        System.out.print("HEEEEY");
         // Create system components
         chatRoomManager = new ChatRoomManager();
         gameLobbyManager = new GameLobbyManager(this);
@@ -125,6 +126,7 @@ public class Server implements ServerNetworkManager.AdminMessageListener, GameLo
     public void onStartGame(ArrayList<Integer> players) {
         serverGameManager.setPlayers(players);
         System.out.println("Game set.");
+        serverGameManager.startNewGame();
     }
 
     /**

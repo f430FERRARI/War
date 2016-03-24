@@ -17,10 +17,18 @@ public class GameForm {
     private JButton quitButton;
     private JPanel Chat;
     private JPanel gamePanel;
+    private JLabel roundLabel;
+    private JLabel timeLeftLabel;
 
     private void createUIComponents() {
         // TODO: place custom component creation code here
     }
+
+    public JLabel getRoundLabel() {return roundLabel;}
+    public JLabel getTimeLeft() {return roundLabel;}
+
+    public void setRoundLabel(JLabel x) {roundLabel = JLabel.;}
+    public void setTimeLeft(JLabel time) {timeLeftLabel = time;}
 
     public JPanel getContentPane() {
         return gamePanel;

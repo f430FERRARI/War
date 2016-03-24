@@ -34,7 +34,7 @@ public class ConnectionAcceptor implements Callable {
      * @return This returns -1 when the connection acceptor stops listening.
      */
     public int receiveConnection() {
-
+        System.out.println("Connection received!");
         int nextId = 1;
         ServerSocket serverSocket = null;
         try {
