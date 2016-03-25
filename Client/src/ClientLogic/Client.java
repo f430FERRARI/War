@@ -60,11 +60,15 @@ public class Client implements LoginDialog.LoginDialogListener, AccountDialog.Ac
         lDialog = new LoginDialog(this, theFrame);
         gameLobbyForm = new GameLobbyForm();
         gameForm = new GameForm();
-
         // Create the remaining system components
-        game = new ClientGameLogic(this, gameForm);   // TODO: Change this
-        chatRoom = new ClientChatRoom(this, gameLobbyForm);
+        game = new ClientGameLogic(this, gameForm);
+        chatRoom = new ClientChatRoom(this);
         lobby = new ClientGameLobby(this, gameLobbyForm, chatRoom);
+
+        // Set up chat room listeners
+        gameLobbyForm.getChatPanel().register(chatRoom);
+        gameForm.getChatPanel().register(chatRoom);
+        chatRoom.setChat(gameLobbyForm.getChatPanel());
 
         // Make login dialog visible
         theFrame.setContentPane(lDialog.getContentPane());
@@ -247,6 +251,7 @@ public class Client implements LoginDialog.LoginDialogListener, AccountDialog.Ac
     public void onStartGame(ArrayList<Integer> gamers) {
         System.out.println("Switching to game screen");
         game.setPlayerList(gamers);
+        chatRoom.setChat(gameForm.getChatPanel());
 
         // Switch the game screen
         theFrame.setContentPane(gameForm.getContentPane());

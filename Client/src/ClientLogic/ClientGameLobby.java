@@ -41,9 +41,9 @@ public class ClientGameLobby implements GameLobbyForm.LobbyGUIListener, ClientNe
         this.lobbyListener = client;
         this.chatListListener = chatRoom;
         this.lobbyScreen = gameLobbyForm;
+        lobbyScreen.register(this);
         this.networkManager = ClientNetworkManager.getInstance();
         networkManager.register(ClientMessageHandler.LISTENER_LOBBY, this);
-        lobbyScreen.register(GameLobbyForm.LISTENER_LOBBY, this); // TODO: Chat
     }
 
     /**
@@ -88,6 +88,7 @@ public class ClientGameLobby implements GameLobbyForm.LobbyGUIListener, ClientNe
                 }
             }
 
+            // Update everyone who needs to know about the lists
             chatListListener.onLobbyListUpdates(lobbyList);
             lobbyScreen.updateLobbyLists(lobbyGuysNames, gameGuysNames, observerDudesNames);
         }
@@ -99,7 +100,6 @@ public class ClientGameLobby implements GameLobbyForm.LobbyGUIListener, ClientNe
      */
     @Override
     public void onClickJoin() {
-
         if (gameLobbyList.size() < LOBBY_GAMELOBBY_CAPACITY) {
             byte[] message = Utilities.prepareOperationMessage(CommunicationCodes.LOBBY_JOIN_GAMELOBBY,
                     client.getMe().getId());
@@ -130,10 +130,10 @@ public class ClientGameLobby implements GameLobbyForm.LobbyGUIListener, ClientNe
      */
     @Override
     public void onClickStart() {
-        System.out.println("Heard the start game click!");
         byte[] message = Utilities.prepareOperationMessage(CommunicationCodes.LOBBY_REQUEST_GAMESTART, client.getMe().getId());
         networkManager.send(message);
         lobbyListener.onStartGame(gameLobbyList); // TODO: Add observers
+        chatListListener.onLobbyListUpdates(lobbyList);
     }
 
     /**
@@ -142,5 +142,7 @@ public class ClientGameLobby implements GameLobbyForm.LobbyGUIListener, ClientNe
     @Override
     public void onReceiveGameStart() {
         lobbyListener.onStartGame(gameLobbyList); // TODO: Add observers
+        chatListListener.onLobbyListUpdates(lobbyList);
+
     }
 }

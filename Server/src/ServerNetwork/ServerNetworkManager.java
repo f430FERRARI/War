@@ -46,7 +46,6 @@ public class ServerNetworkManager extends ServerMessageHandler implements Connec
     public void startServerNetwork() {
         resetServerNetwork();
         executorService.submit(new ConnectionAcceptor(this));
-        System.out.println("Started connection av");
     }
 
     /**

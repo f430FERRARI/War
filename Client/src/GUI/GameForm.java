@@ -27,4 +27,8 @@ public class GameForm {
     public JPanel getContentPane() {
         return gamePanel;
     }
+
+    public Chat getChatPanel() {
+        return chatPanel;
+    }
 }
