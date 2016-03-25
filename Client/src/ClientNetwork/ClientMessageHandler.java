@@ -128,6 +128,7 @@ public class ClientMessageHandler {
                 String text2 = Utilities.byteArrayToString(Arrays.copyOfRange(message, 5, message.length));
                 chatMessageListener.onClientRcvGrpMsg(senderID2, text2);
                 break;
+
             case CommunicationCodes.GAME_REQUEST_DRAW:
                 System.out.println("Please Draw!");
                 int roundNumber = byteArrayToInt(Arrays.copyOfRange(message, 1, 5));

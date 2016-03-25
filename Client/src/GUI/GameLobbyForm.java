@@ -25,7 +25,6 @@ public class GameLobbyForm {
     private JPanel lobbyPanel;
     private JButton sendButton;
     private JLabel gameLobbyLabel;
-    private JPanel Chat;
     private JTextField messageField;
     private JButton leaveButton;
     private JButton startGameButton;
@@ -67,17 +66,17 @@ public class GameLobbyForm {
         });
 
         // TODO: Use this for chat
-        sendButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {      // TODO: The send button is nested in private
-                System.out.println("Got click send!");
-
-                int chatType = chatTabs.getSelectedIndex();
-                String text = messageField.getText();
-                int dest = inChatList.getSelectedIndex();
-                chatGUIListener.onClickSendMsg(chatType, dest, text);
-            }
-        });
+//        sendButton.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent actionEvent) {      // TODO: The send button is nested in private
+//                System.out.println("Got click send!");
+//
+//                int chatType = chatTabs.getSelectedIndex();
+//                String text = messageField.getText();
+//                int dest = inChatList.getSelectedIndex();
+//                chatGUIListener.onClickSendMsg(chatType, dest, text);
+//            }
+//        });
 
         startGameButton.addActionListener(new ActionListener() {
             @Override

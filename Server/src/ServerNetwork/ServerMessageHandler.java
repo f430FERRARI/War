@@ -107,6 +107,7 @@ public class ServerMessageHandler {
                 System.out.println("Received message. Player wants to start game.");
                 senderId = getSenderId(message);
                 lobbyMessageListener.onReceiveGameStart(senderId);
+                break;
 
             case CommunicationCodes.CHAT_SEND_IND_MSG:
                 System.out.println("Got client chat message!");
