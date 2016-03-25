@@ -170,7 +170,7 @@
           <text value="Time Left: "/>
         </properties>
       </component>
-      <nested-form id="f080a" form-file="GUI/Chat.form">
+      <nested-form id="f080a" form-file="GUI/Chat.form" binding="chatPanel">
         <constraints>
           <grid row="6" column="1" row-span="1" col-span="4" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>

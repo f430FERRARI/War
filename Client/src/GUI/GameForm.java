@@ -12,6 +12,7 @@ public class GameForm {
     private JPanel gamePanel;
     private JLabel roundLabel;
     private JLabel timeLeftLabel;
+    private Chat chatPanel;
 
     private void createUIComponents() {
         // TODO: place custom component creation code here

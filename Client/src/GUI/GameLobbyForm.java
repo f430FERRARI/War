@@ -1,7 +1,6 @@
 package GUI;
 
 import ClientLogic.ChatListener;
-import ClientLogic.ClientChatRoom;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -21,16 +20,11 @@ public class GameLobbyForm {
     private JButton observeButton;
     private JList playerList;
     private JList observerList;
-    private JList inChatList;
     private JPanel lobbyPanel;
-    private JButton sendButton;
     private JLabel gameLobbyLabel;
-    private JTextField messageField;
     private JButton leaveButton;
     private JButton startGameButton;
-    private JTabbedPane chatTabs;
-    private JTextArea grpChatArea;
-    private JTextArea indChatArea;
+    private Chat chatPanel;
 
     private DefaultListModel onlineListModel, playerListModel, observerListModel;
 
@@ -105,7 +99,7 @@ public class GameLobbyForm {
             onlineListModel.addElement(onlineGuy);
         }
         onlineList.setModel(onlineListModel);
-        inChatList.setModel(onlineListModel);
+//        inChatList.setModel(onlineListModel);
 
         // Populate the game lobby list with the updated list
         for (String gameGuy : game) {
@@ -121,12 +115,12 @@ public class GameLobbyForm {
     }
 
     public void updateChatArea(int area, String player, String msg) {   // TODO: Chat
-        if (area == ClientChatRoom.CHATROOM_GRP_MSG) {
-            grpChatArea.append(player + ": " + msg + "\n");
-            grpChatArea.update(grpChatArea.getGraphics());
-        } else if (area == ClientChatRoom.CHATROOM_IND_MSG){
-            indChatArea.append(player + ": " + msg + "\n");
-        }
+//        if (area == ClientChatRoom.CHATROOM_GRP_MSG) {
+//            grpChatArea.append(player + ": " + msg + "\n");
+//            grpChatArea.update(grpChatArea.getGraphics());
+//        } else if (area == ClientChatRoom.CHATROOM_IND_MSG){
+//            indChatArea.append(player + ": " + msg + "\n");
+//        }
     }
 
     public JPanel getContentPane() {
