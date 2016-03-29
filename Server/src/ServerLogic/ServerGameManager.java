@@ -19,6 +19,7 @@ public class ServerGameManager implements ServerMessageHandler.GameMessageListen
     private ServerNetworkManager networkManager;
     private int roundNumber;
     private ArrayList<Integer> drawnCards = new ArrayList<>();
+    private ArrayList<Integer> playerScores = new ArrayList<>();
 
     public ServerGameManager() {
 
@@ -37,6 +38,11 @@ public class ServerGameManager implements ServerMessageHandler.GameMessageListen
         roundNumber = 0;
         // Set player count
         playerCount = players.size();
+
+        // Initialize all player scores to 0
+        for (int i = 0; i < playerCount; i++) {
+            playerScores.add(i, 0);
+        }
 
         // Create a deck of cards
         cards = new int[52];
@@ -180,14 +186,30 @@ public class ServerGameManager implements ServerMessageHandler.GameMessageListen
 
         System.out.println("server's " + message);
 
+
         if (drawnCards.size() == playerCount) {
             int winningPlayerID = determineRoundWinner();
+            winningPlayerID = winningPlayerID - 1;
+
+            System.out.println("WINNING PLAYER ID: " + winningPlayerID);
+
+            int oldScore = playerScores.get(winningPlayerID);
+            System.out.println("OLD SCORE: " + oldScore);
+            int newScore = oldScore + 1;
+            System.out.println("NEW SCORE: " + newScore);
+            playerScores.set(winningPlayerID, newScore);
+
+            System.out.println("PLAYER SCORES: " + playerScores);
+
+            if (determineGameOver()) endGame(winningPlayerID);
+
             // update points here who won, send to all players
-            if (determineGameOver()){
-                endGame(winningPlayerID);
-            }
             updateRound();
+
         }
+        // Draw card and broadcast result to everyone, check if game is done
+
+
         // Draw card and broadcast result to everyone, check if game is done
 
     }
@@ -200,7 +222,7 @@ public class ServerGameManager implements ServerMessageHandler.GameMessageListen
     public int determineRoundWinner(){
         int largestCard = 0;
         int winningPlayer = 0;
-        for(int i = 0; i < players.size()-1; i++) { // determine winner
+        for(int i = 0; i <= players.size()-1; i++) { // determine winner
             System.out.println("drawn cards " + drawnCards.get(i));
             System.out.println("largest card " + largestCard);
             if (drawnCards.get(i) > largestCard){
