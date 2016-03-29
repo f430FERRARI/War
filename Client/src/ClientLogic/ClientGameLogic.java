@@ -40,6 +40,17 @@ public class ClientGameLogic implements GameForm.GameFormListener, ClientNetwork
 
     }
 
+    @Override
+    /**
+     * This method will update the label with the game winner!
+     */
+    public void displayWinner(int id){
+        System.out.println("Display winner");
+        String text = "Winner is..." + client.getPlayerList().get(id).getName();
+        gameScreen.disableDrawButtonColour();
+        gameScreen.setWinnerLabel(text);
+        gameScreen.setWarLabel("GAME OVER");
+    }
     /**
      * This method sends a draw message to the server.
      */
@@ -90,6 +101,7 @@ public class ClientGameLogic implements GameForm.GameFormListener, ClientNetwork
     @Override
     public void onBeginRound(int round) {
         System.out.println("ON BEGIN ROUND!!");
+
         gameScreen.enableDrawButtonColour();
         String roundLabel = "Round # " + round;
         gameScreen.setRoundLabel(roundLabel);

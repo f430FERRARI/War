@@ -32,6 +32,8 @@ public class ClientMessageHandler {
 
         void displayCard(String card);
 
+        void displayWinner(int id);
+
     }
 
     public interface AdminMessageListener {
@@ -144,7 +146,10 @@ public class ClientMessageHandler {
                 System.out.println(card);
                 gameMessageListener.displayCard(card);
                 break;
-
+            case CommunicationCodes.GAME_WINNER_ID:
+                System.out.println("Received game winner");
+                int winnerID = byteArrayToInt(Arrays.copyOfRange(message, 1, message.length));
+                gameMessageListener.displayWinner(winnerID);
 
         }
     }

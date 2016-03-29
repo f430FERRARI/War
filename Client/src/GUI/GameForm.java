@@ -17,9 +17,10 @@ public class GameForm {
     private JButton quitButton;
     private JPanel gamePanel;
     private JLabel roundLabel;
-    private JLabel timeLeftLabel;
+    private JLabel winnerLabel;
     private Chat chatPanel;
     private JLabel myCardLabel;
+    private JLabel warLabel;
 
     private GameFormListener gameFormListener;
 
@@ -48,27 +49,32 @@ public class GameForm {
         // TODO: place custom component creation code here
     }
 
-    public JLabel getRoundLabel() {return roundLabel;}
-    public JLabel getTimeLeft() {return roundLabel;}
+    public void setWinnerLabel(String text){
+        winnerLabel.setText(text);
+    }
 
     public void setMyCardLabel(String text) {
-        System.out.println("Update label");
+        System.out.println("Update card label");
         myCardLabel.setText(text);
     }
-
+    public void setWarLabel(String text) {
+        System.out.println("Update war label");
+        warLabel.setText(text);
+    }
     public void setRoundLabel(String text) {
-        System.out.println("Update label");
+        System.out.println("Update round label");
         roundLabel.setText(text);
     }
-    public void setTimeLeft(JLabel time) {timeLeftLabel = time;}
 
     public void enableDrawButtonColour(){
-        drawACardButton.setEnabled(true);
+        //drawACardButton.setEnabled(true);
         drawACardButton.setBackground(Color.GREEN);
     }
 
-    public void disableDrawButtonColour(){
+    public void disableDrawButton(){
         drawACardButton.setEnabled(false);
+    }
+    public void disableDrawButtonColour(){
         drawACardButton.setBackground(Color.GRAY);
     }
 
