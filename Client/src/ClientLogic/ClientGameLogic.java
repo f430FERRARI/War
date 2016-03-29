@@ -7,7 +7,7 @@ import GUI.GameForm;
 
 import java.util.ArrayList;
 
-public class ClientGameLogic implements ClientNetworkManager.GameMessageListener {
+public class ClientGameLogic implements GameForm.GameFormListener, ClientNetworkManager.GameMessageListener {
 
     private Client client;
     private ClientNetworkManager networkManager;
@@ -42,9 +42,11 @@ public class ClientGameLogic implements ClientNetworkManager.GameMessageListener
     /**
      * This method sends a draw message to the server.
      */
+    @Override
     public void draw() {
         // Send draw to the server
-        byte[] message = Utilities.prepareOperationMessage(CommunicationCodes.GAME_REQUEST_DRAW, client.getMe().getId());
+        System.out.println("draw");
+        byte[] message = Utilities.prepareOperationMessage(CommunicationCodes.GAME_DRAW, client.getMe().getId());
         networkManager.send(message);
     }
 
@@ -86,15 +88,20 @@ public class ClientGameLogic implements ClientNetworkManager.GameMessageListener
 
     @Override
     public void onBeginRound(int round) {
+        System.out.println("ON BEGIN ROUND!!");
+        gameScreen.setDrawButtonColour();
         String roundLabel = "Round # " + round;
-//        gameScreen.setRoundLabel(roundLabel);
-
-
+        gameScreen.setRoundLabel(roundLabel);
+    }
+    @Override
+    public void displayCard(String card){
+        System.out.println("Displaying card...");
+        gameScreen.setMyCardLabel(card);
     }
 
     @Override
     public void onRoundEnd() {
-
+        gameScreen.resetDrawButtonColour();
     }
 
     @Override

@@ -5,6 +5,7 @@ import ClientLogic.Utilities;
 import java.util.Arrays;
 
 import static ClientLogic.Utilities.byteArrayToInt;
+import static ClientLogic.Utilities.byteArrayToString;
 
 public class ClientMessageHandler {
 
@@ -28,6 +29,9 @@ public class ClientMessageHandler {
         void onReceiveScores();
 
         void onGameFinished();
+
+        void displayCard(String card);
+
     }
 
     public interface AdminMessageListener {
@@ -130,10 +134,17 @@ public class ClientMessageHandler {
                 break;
 
             case CommunicationCodes.GAME_REQUEST_DRAW:
-                System.out.println("Please Draw!");
+                System.out.println("The button is green!");
                 int roundNumber = byteArrayToInt(Arrays.copyOfRange(message, 1, 5));
                 gameMessageListener.onBeginRound(roundNumber);
                 break;
+            case CommunicationCodes.GAME_RETURN_DRAW:
+                System.out.println("GOT DA CARD");
+                String card = byteArrayToString(Arrays.copyOfRange(message, 1, message.length));
+                System.out.println(card);
+                gameMessageListener.displayCard(card);
+                break;
+
 
         }
     }

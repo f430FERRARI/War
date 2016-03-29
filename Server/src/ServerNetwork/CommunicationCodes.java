@@ -35,6 +35,7 @@ public class CommunicationCodes {
     public static final byte GAME_PAUSE = 0x33;
     public static final byte GAME_REQUEST_UNPAUSE = 0x34;
     public static final byte GAME_UNPAUSE = 0x35;
+    public static final byte GAME_RETURN_DRAW = 0x36;
 
 
 }

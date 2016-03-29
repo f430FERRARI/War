@@ -1,6 +1,7 @@
 package ServerNetwork;
 
 
+import ServerLogic.ServerGameManager;
 import ServerLogic.Utilities;
 
 import java.util.Arrays;
@@ -47,7 +48,7 @@ public class ServerMessageHandler {
     }
 
     public interface GameMessageListener {
-        void onReceiveDraw();
+        void onReceiveDraw(int id);
 
         void onReceiveQuit(int id);
 
@@ -124,6 +125,11 @@ public class ServerMessageHandler {
                 byte[] text2 = Arrays.copyOfRange(message, 5, message.length);
                 chatMessageListener.onServerRcvGrpMsg(senderID2, senderIDBytes2, text2);
                 break;
+
+            case CommunicationCodes.GAME_DRAW:
+                System.out.println("Client selected draw card button");
+                senderId = getSenderId(message);
+                gameMessageListener.onReceiveDraw(senderId);
         }
     }
 
