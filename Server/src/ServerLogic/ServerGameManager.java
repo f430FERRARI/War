@@ -94,7 +94,9 @@ public class ServerGameManager implements ServerMessageHandler.GameMessageListen
 
     public String translateIntToCard(int cardValue) {
         int cardNumber = (int) Math.ceil(cardValue/4) + 1;
-        int suit = cardValue % 4 + 1;
+        int suit = cardValue % 4;
+
+
         System.out.println("Suit: " + suit);
         System.out.println("Card Number: " + cardNumber);
         String stringSuit = cardNumber + " of ";
@@ -113,17 +115,18 @@ public class ServerGameManager implements ServerMessageHandler.GameMessageListen
         }
 
         switch (suit){
-            case 1:
+            case 0:
                 stringSuit = stringSuit + "♠";
                 break;
-            case 2:
+            case 1:
                 stringSuit = stringSuit + "♥";
                 break;
-            case 3:
+            case 2:
                 stringSuit = stringSuit + "♦";
                 break;
-            case 4:
+            case 3:
                 stringSuit = stringSuit + "♣";
+                break;
         }
         return stringSuit;
     }
@@ -144,9 +147,10 @@ public class ServerGameManager implements ServerMessageHandler.GameMessageListen
      * broadcasts the card to everyone immediately. Once it receives everyone's draw, it checks if the game is complete.
      */
     public void onReceiveDraw(int id) {
-        System.out.println("ON RECEIVE DRAW SERVER " + players.indexOf(id));
+        System.out.println("ON RECEIVE DRAW SERVER " + playerCards.get(players.indexOf(id)).get(0));
 
-        int randomCard = playerCards.get(players.indexOf(id)).get(roundNumber-1);
+        int randomCard = playerCards.get(players.indexOf(id)).remove(0);
+        System.out.println(randomCard);
 
 
         //drawnCards.add(id, randomCard);
@@ -168,7 +172,9 @@ public class ServerGameManager implements ServerMessageHandler.GameMessageListen
         System.out.println("server's " + message);
 
         if (drawnCards.size() == playerCount) {
-            determineRoundWinner();
+            int winningPlayerID = determineRoundWinner();
+            // update points here who won, send to all players
+            updateRound();
         }
         // Draw card and broadcast result to everyone, check if game is done
         if (determineGameOver()){
@@ -197,7 +203,7 @@ public class ServerGameManager implements ServerMessageHandler.GameMessageListen
      * This method is called when the game is over. It broadcasts the winner and everyone's scores to the client.
      */
     public void endGame() {
-        // Broadcast winners to everyone
+        // Broadcast game winner to everyone
     }
 
     /**
@@ -233,5 +239,10 @@ public class ServerGameManager implements ServerMessageHandler.GameMessageListen
             ar[index] = ar[i];
             ar[i] = a;
         }
+    }
+
+    public static void main(String[] args) {
+        ServerGameManager gm = new ServerGameManager();
+        System.out.println(gm.translateIntToCard(48));
     }
 }

@@ -38,6 +38,7 @@ public class GameForm {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 gameFormListener.draw();
+                disableDrawButtonColour();
             }
         });
     }
@@ -61,11 +62,13 @@ public class GameForm {
     }
     public void setTimeLeft(JLabel time) {timeLeftLabel = time;}
 
-    public void setDrawButtonColour(){
+    public void enableDrawButtonColour(){
+        drawACardButton.setEnabled(true);
         drawACardButton.setBackground(Color.GREEN);
     }
 
-    public void resetDrawButtonColour(){
+    public void disableDrawButtonColour(){
+        drawACardButton.setEnabled(false);
         drawACardButton.setBackground(Color.GRAY);
     }
 

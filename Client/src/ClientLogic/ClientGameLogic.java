@@ -36,6 +36,7 @@ public class ClientGameLogic implements GameForm.GameFormListener, ClientNetwork
      * This method starts a round of War. It enables the draw button and begins a timer for the user to press draw.
      */
     public void startRound() {
+        // start timer
 
     }
 
@@ -89,7 +90,7 @@ public class ClientGameLogic implements GameForm.GameFormListener, ClientNetwork
     @Override
     public void onBeginRound(int round) {
         System.out.println("ON BEGIN ROUND!!");
-        gameScreen.setDrawButtonColour();
+        gameScreen.enableDrawButtonColour();
         String roundLabel = "Round # " + round;
         gameScreen.setRoundLabel(roundLabel);
     }
@@ -101,16 +102,16 @@ public class ClientGameLogic implements GameForm.GameFormListener, ClientNetwork
 
     @Override
     public void onRoundEnd() {
-        gameScreen.resetDrawButtonColour();
+
     }
 
     @Override
     public void onReceiveScores() {
-
     }
 
     @Override
     public void onGameFinished() {
+        // display winner
 
     }
 }
