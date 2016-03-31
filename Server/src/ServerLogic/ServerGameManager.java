@@ -201,6 +201,17 @@ public class ServerGameManager implements ServerMessageHandler.GameMessageListen
 
             System.out.println("PLAYER SCORES: " + playerScores);
 
+            for (int i = 0; i < players.size(); i++) {
+                byte[] pointsMessage = ClientLogic.Utilities.prepareOperationMessage(ClientNetwork.CommunicationCodes.GAME_UPDATE_SCORE_PRIVATE, playerScores.get(i));
+                networkManager.send(players.get(i), pointsMessage);
+            }
+            /*
+            byte[] pointsMessage = Utilities.intToByteArray(playerScores.get(winningPlayerID));
+
+            byte[] pMessage = Utilities.prepareMessage(CommunicationCodes.GAME_UPDATE_SCORE_PRIVATE, pointsMessage);
+            networkManager.send(id, pMessage);
+            */
+            
             if (determineGameOver()) endGame(winningPlayerID);
 
             // update points here who won, send to all players
