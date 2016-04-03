@@ -34,6 +34,8 @@ public class GameLobbyForm {
         void onClickObserve();
 
         void onClickStart();
+
+        void onClickLeave();
     }
 
     public GameLobbyForm() {
@@ -61,6 +63,12 @@ public class GameLobbyForm {
             public void actionPerformed(ActionEvent actionEvent) {
                 System.out.println("Start button clicked");
                 lobbyGUIListener.onClickStart();
+            }
+        });
+        leaveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) { lobbyGUIListener.onClickLeave();
+
             }
         });
     }

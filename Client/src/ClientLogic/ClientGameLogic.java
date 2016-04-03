@@ -50,6 +50,7 @@ public class ClientGameLogic implements GameForm.GameFormListener, ClientNetwork
         gameScreen.disableDrawButtonColour();
         gameScreen.setWinnerLabel(text);
         gameScreen.setWarLabel("GAME OVER");
+
     }
     /**
      * This method sends a draw message to the server.
@@ -67,8 +68,8 @@ public class ClientGameLogic implements GameForm.GameFormListener, ClientNetwork
      */
     public void quit() {
         // Send quit to the server
-//        byte[] message = Utilities.prepareOperationMessage(CommunicationCodes.GAME_REQUEST_QUIT, client.getMe().getId());
-//        networkManager.send(message);
+        byte[] message = Utilities.prepareOperationMessage(CommunicationCodes.GAME_REQUEST_QUIT, client.getMe().getId());
+        networkManager.send(message);
     }
 
     /**
@@ -76,14 +77,14 @@ public class ClientGameLogic implements GameForm.GameFormListener, ClientNetwork
      */
     public void pause() {
         // Send pause to the server
-        byte[] message = Utilities.prepareOperationMessage(CommunicationCodes.GAME_REQUEST_PAUSE, client.getMe().getId());
-        networkManager.send(message);
+//        byte[] message = Utilities.prepareOperationMessage(CommunicationCodes.GAME_REQUEST_PAUSE, client.getMe().getId());
+ //       networkManager.send(message);
     }
 
     public void unPause() {
         // Send unpause to the server
-        byte[] message = Utilities.prepareOperationMessage(CommunicationCodes.GAME_REQUEST_UNPAUSE, client.getMe().getId());
-        networkManager.send(message);
+//        byte[] message = Utilities.prepareOperationMessage(CommunicationCodes.GAME_REQUEST_UNPAUSE, client.getMe().getId());
+ //       networkManager.send(message);
     }
 
     /**
@@ -96,6 +97,11 @@ public class ClientGameLogic implements GameForm.GameFormListener, ClientNetwork
     @Override
     public void onBeginGame() {
 
+    }
+
+    public void onQuit(int id) {
+        System.out.println("SOMEONE QUIT THE GAME");
+        client.returnToGameLobby(id);
     }
 
     @Override

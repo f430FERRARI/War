@@ -34,6 +34,8 @@ public class ClientMessageHandler {
 
         void displayWinner(int id);
 
+        void onQuit(int id);
+
     }
 
     public interface AdminMessageListener {
@@ -60,6 +62,8 @@ public class ClientMessageHandler {
         void onReceiveLobbyLists(String lists);
 
         void onReceiveGameStart();
+
+        void gameInProgress(boolean i);
     }
 
     /**
@@ -150,7 +154,19 @@ public class ClientMessageHandler {
                 System.out.println("Received game winner");
                 int winnerID = byteArrayToInt(Arrays.copyOfRange(message, 1, message.length));
                 gameMessageListener.displayWinner(winnerID);
+                lobbyMessageListener.gameInProgress(false);
+                break;
 
+            case CommunicationCodes.LOBBY_GAME_NOTIFICATION:
+                System.out.println("Game still happening...");
+                lobbyMessageListener.gameInProgress(true);
+                break;
+
+            case CommunicationCodes.GAME_QUIT:
+                System.out.println("Someone quit, maybe me?");
+                int quitterID = byteArrayToInt(Arrays.copyOfRange(message,1,5));
+                gameMessageListener.onQuit(quitterID);
+                break;
         }
     }
 

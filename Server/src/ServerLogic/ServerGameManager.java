@@ -99,6 +99,10 @@ public class ServerGameManager implements ServerMessageHandler.GameMessageListen
         byte[] round = Utilities.intToByteArray(roundNumber);
         byte[] message = Utilities.prepareMessage(CommunicationCodes.GAME_REQUEST_DRAW, round);
         networkManager.sendToAll(message);
+
+        //Lets everyone know game is happening
+        byte[] message2 = Utilities.prepareOperationMessage(CommunicationCodes.LOBBY_GAME_NOTIFICATION);
+        networkManager.sendToAll(message2);
     }
 
     /**
@@ -263,9 +267,20 @@ public class ServerGameManager implements ServerMessageHandler.GameMessageListen
      * the event is announced to the other players and the player is removed from the Game.
      *
      * @param id The id number of the player who quit.
+
      */
     public void onReceiveQuit(int id) {
+        int indexOfID = players.indexOf(id);
+        playerCards.remove(indexOfID);
+        playerScores.remove(indexOfID);
+        players.remove(indexOfID);
+        playerCount--;
 
+
+
+        byte [] byteID = Utilities.intToByteArray(id);
+        byte [] message = Utilities.prepareMessage(CommunicationCodes.GAME_QUIT, byteID);
+        networkManager.sendToAll(message);
     }
 
 

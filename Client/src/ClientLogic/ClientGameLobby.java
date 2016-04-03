@@ -21,6 +21,8 @@ public class ClientGameLobby implements GameLobbyForm.LobbyGUIListener, ClientNe
     private ArrayList<Integer> gameLobbyList = new ArrayList<>();
     private ArrayList<Integer> observerList = new ArrayList<>();
 
+    private boolean gameInMotion = false;
+
     private Client client;
     private ClientGameLobbyListener lobbyListener;
     private ChatListListener chatListListener;
@@ -130,10 +132,12 @@ public class ClientGameLobby implements GameLobbyForm.LobbyGUIListener, ClientNe
      */
     @Override
     public void onClickStart() {
-        byte[] message = Utilities.prepareOperationMessage(CommunicationCodes.LOBBY_REQUEST_GAMESTART, client.getMe().getId());
-        networkManager.send(message);
-        lobbyListener.onStartGame(gameLobbyList); // TODO: Add observers
-        chatListListener.onLobbyListUpdates(lobbyList);
+        if (gameLobbyList.size() > 1 && gameInMotion == false) {
+            byte[] message = Utilities.prepareOperationMessage(CommunicationCodes.LOBBY_REQUEST_GAMESTART, client.getMe().getId());
+            networkManager.send(message);
+            lobbyListener.onStartGame(gameLobbyList); // TODO: Add observers
+            chatListListener.onLobbyListUpdates(lobbyList);
+        }
     }
 
     /**
@@ -145,4 +149,15 @@ public class ClientGameLobby implements GameLobbyForm.LobbyGUIListener, ClientNe
         chatListListener.onLobbyListUpdates(lobbyList);
 
     }
+
+    public void gameInProgress(boolean i) {
+        gameInMotion = i;
+        System.out.println("GAME IN MOTION? " + i);
+    }
+
+    public void onClickLeave() {
+        byte[] message = Utilities.prepareOperationMessage(CommunicationCodes.LOBBY_EXIT_GAMELOBBY, client.getMe().getId());
+        networkManager.send(message);
+    }
+
 }

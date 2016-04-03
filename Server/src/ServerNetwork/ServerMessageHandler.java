@@ -53,6 +53,7 @@ public class ServerMessageHandler {
         void onReceiveQuit(int id);
 
         void onReceivePause(int id);
+
     }
 
     /**
@@ -130,6 +131,14 @@ public class ServerMessageHandler {
                 System.out.println("Client selected draw card button");
                 senderId = getSenderId(message);
                 gameMessageListener.onReceiveDraw(senderId);
+                break;
+
+            case CommunicationCodes.GAME_REQUEST_QUIT:
+                System.out.println("Someone wants to quit");
+                int senderID = getSenderId(message);
+                gameMessageListener.onReceiveQuit(senderID);
+//                lobbyMessageListener.onClientExitGameLobby(senderID);
+                break;
         }
     }
 

@@ -262,6 +262,26 @@ public class Client implements LoginDialog.LoginDialogListener, AccountDialog.Ac
         theFrame.setVisible(true);
     }
 
+    /**
+     * Returns the user that quit to the game lobby
+     * @param id
+     *
+     */
+
+    public void returnToGameLobby(int id) {
+        if (playerList.size() == 1) {
+            lobby.gameInProgress(false);
+        }
+        if (id == getMe().getId()) {
+//            lobby.onClickLeave();
+            chatRoom.setChat(gameLobbyForm.getChatPanel());
+            theFrame.setContentPane(gameLobbyForm.getContentPane());
+            theFrame.setLocationRelativeTo(null);
+            theFrame.pack();
+            theFrame.setVisible(true);
+        }
+        onPlayerRemoved(id);
+    }
     public Player getMe() {
         return me;
     }

@@ -13,7 +13,6 @@ import java.awt.event.ActionListener;
  */
 public class GameForm {
     private JButton drawACardButton;
-    private JButton pauseButton;
     private JButton quitButton;
     private JPanel gamePanel;
     private JLabel roundLabel;
@@ -26,6 +25,7 @@ public class GameForm {
 
     public interface GameFormListener {
         void draw();
+        void quit();
     }
 
     public GameForm() {
@@ -40,6 +40,12 @@ public class GameForm {
             public void actionPerformed(ActionEvent actionEvent) {
                 gameFormListener.draw();
                 disableDrawButtonColour();
+            }
+        });
+        quitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                gameFormListener.quit();
             }
         });
     }
