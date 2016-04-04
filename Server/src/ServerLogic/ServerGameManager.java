@@ -171,10 +171,6 @@ public class ServerGameManager implements ServerMessageHandler.GameMessageListen
         drawnCards.add(players.indexOf(id), randomCard);
 
 
-/*
-        System.out.println("DRAWN CARD @ 0 " + drawnCards.get(0));
-        System.out.println("DRAWN CARD @ 1 " + drawnCards.get(1));
-*/
         System.out.println("drawn card " + drawnCards.get(players.indexOf(id)));
 
 
@@ -206,16 +202,37 @@ public class ServerGameManager implements ServerMessageHandler.GameMessageListen
             System.out.println("PLAYER SCORES: " + playerScores);
 
             for (int i = 0; i < players.size(); i++) {
-                byte[] pointsMessage = ClientLogic.Utilities.prepareOperationMessage(ClientNetwork.CommunicationCodes.GAME_UPDATE_SCORE_PRIVATE, playerScores.get(i));
+                byte[] playersScore = Utilities.intToByteArray(playerScores.get(i));
+                byte[] pointsMessage = ServerLogic.Utilities.prepareMessage(ServerNetwork.CommunicationCodes.GAME_UPDATE_SCORE_PRIVATE, playersScore);
                 networkManager.send(players.get(i), pointsMessage);
             }
-            /*
-            byte[] pointsMessage = Utilities.intToByteArray(playerScores.get(winningPlayerID));
 
-            byte[] pMessage = Utilities.prepareMessage(CommunicationCodes.GAME_UPDATE_SCORE_PRIVATE, pointsMessage);
-            networkManager.send(id, pMessage);
-            */
-            
+
+            // updates other players' scores on each client
+            for (int j = 0; j < players.size(); j++) {
+
+                otherPlayersScores.clear();
+                otherPlayersScores.addAll(playerScores);
+                //System.out.println("otherPlayersScores size BEFORE: " + otherPlayersScores.size());
+                if (players.get(i) != players.get(j)) {
+                    //otherPlayersScores.remove(players.get(i));
+
+                    //System.out.println("otherPlayersScores size AFTER: " + otherPlayersScores.size());
+                    for (int k = 0; k < otherPlayersScores.size(); k++) {
+                        if ((k == 0) && (players.get(j) == players.get(k))){
+                            byte[] p1ScoreMessage = ClientLogic.Utilities.prepareOperationMessage(ClientNetwork.CommunicationCodes.GAME_UPDATE_SCORE_PLAYER_1, otherPlayersScores.get(k));
+                            networkManager.send(players.get(i), p1ScoreMessage);
+                        }
+                        if ((k == 1) && (players.get(j) == players.get(k))) {
+                            byte[] p2ScoreMessage = ClientLogic.Utilities.prepareOperationMessage(ClientNetwork.CommunicationCodes.GAME_UPDATE_SCORE_PLAYER_2, otherPlayersScores.get(k));
+                            networkManager.send(players.get(i), p2ScoreMessage);
+                        }
+                        if ((k == 2) && (players.get(j) == players.get(k))) {
+                            byte[] p3ScoreMessage = ClientLogic.Utilities.prepareOperationMessage(ClientNetwork.CommunicationCodes.GAME_UPDATE_SCORE_PLAYER_3, otherPlayersScores.get(k));
+                            networkManager.send(players.get(i), p3ScoreMessage);
+                        }
+                    }
+
             if (determineGameOver()) endGame(winningPlayerID);
 
             // update points here who won, send to all players

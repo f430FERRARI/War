@@ -37,5 +37,8 @@ public class CommunicationCodes {
     public static final byte GAME_RETURN_DRAW = 0x36;
     public static final byte GAME_WINNER_ID = 0x37;
     public static final byte GAME_UPDATE_SCORE_PRIVATE = 0x38;
+    public static final byte GAME_UPDATE_SCORE_PLAYER_1 = 0x40;
+    public static final byte GAME_UPDATE_SCORE_PLAYER_2 = 0x41;
+    public static final byte GAME_UPDATE_SCORE_PLAYER_3 = 0x42;
 
 }

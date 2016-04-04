@@ -36,6 +36,10 @@ public class ClientMessageHandler {
 
         void onQuit(int id);
 
+        void updateScoreboard(int score);
+
+        void updateOtherScoreboards(int id, int score);
+
     }
 
     public interface AdminMessageListener {
@@ -166,6 +170,26 @@ public class ClientMessageHandler {
                 System.out.println("Someone quit, maybe me?");
                 int quitterID = byteArrayToInt(Arrays.copyOfRange(message,1,5));
                 gameMessageListener.onQuit(quitterID);
+                break;
+            case CommunicationCodes.GAME_UPDATE_SCORE_PRIVATE:
+                System.out.println("Updating winner!");
+                int score = byteArrayToInt(Arrays.copyOfRange(message, 1, message.length));
+                gameMessageListener.updateScoreboard(score);
+                break;
+            case CommunicationCodes.GAME_UPDATE_SCORE_PLAYER_1:
+                System.out.println("Updating Player 1's score!!!!");
+                int p1Score = byteArrayToInt(Arrays.copyOfRange(message, 1, message.length));
+                gameMessageListener.updateOtherScoreboards(1, p1Score);
+                break;
+            case CommunicationCodes.GAME_UPDATE_SCORE_PLAYER_2:
+                System.out.println("Updating Player 2's score!!!!");
+                int p2Score = byteArrayToInt(Arrays.copyOfRange(message, 1, message.length));
+                gameMessageListener.updateOtherScoreboards(2, p2Score);
+                break;
+            case CommunicationCodes.GAME_UPDATE_SCORE_PLAYER_3:
+                System.out.println("Updating Player 3's score!!!!");
+                int p3Score = byteArrayToInt(Arrays.copyOfRange(message, 1, message.length));
+                gameMessageListener.updateOtherScoreboards(1, p3Score);
                 break;
         }
     }
