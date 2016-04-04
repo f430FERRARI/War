@@ -90,8 +90,29 @@ public class ClientGameLogic implements GameForm.GameFormListener, ClientNetwork
     /**
      * This method updates the scoreboard.
      */
-    public void updateScoreboard() {
+    /**
+     * This method updates the scoreboard.
+     */
+    @Override
+    public void updateScoreboard(int score) {
+        String pointsLabel = "Points: " + score;
+        gameScreen.setMyPointsLabel(pointsLabel);
+    }
 
+    @Override
+    public void updateOtherScoreboards(int id, int score) {
+        String notMyPointsLabel = "Points: " + score;
+        switch (id) {
+            case 1:
+                gameScreen.setPlayer1PointsLabel(notMyPointsLabel);
+                break;
+            case 2:
+                gameScreen.setPlayer2PointsLabel(notMyPointsLabel);
+                break;
+            case 3:
+                gameScreen.setPlayer3PointsLabel(notMyPointsLabel);
+                break;
+        }
     }
 
     @Override

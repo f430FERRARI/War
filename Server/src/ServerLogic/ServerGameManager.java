@@ -20,6 +20,7 @@ public class ServerGameManager implements ServerMessageHandler.GameMessageListen
     private int roundNumber;
     private ArrayList<Integer> drawnCards = new ArrayList<>();
     private ArrayList<Integer> playerScores = new ArrayList<>();
+    private ArrayList<Integer> otherPlayersScores = new ArrayList<>();
 
     public ServerGameManager() {
 
@@ -76,7 +77,7 @@ public class ServerGameManager implements ServerMessageHandler.GameMessageListen
             System.out.print(playerCards.get(i));
         }
         */
-        for (int i =0; i < players.size(); i++) {
+        for (int i = 0; i < players.size(); i++) {
             System.out.println(players.size());
             System.out.print(players.get(i));
         }
@@ -91,7 +92,7 @@ public class ServerGameManager implements ServerMessageHandler.GameMessageListen
         roundNumber++;
         drawnCards.clear();
         // Initialize values to drawn cards array
-        for (int i=0; i < drawnCards.size(); i++) {
+        for (int i = 0; i < drawnCards.size(); i++) {
             drawnCards.add(-1);
         }
 
@@ -109,7 +110,7 @@ public class ServerGameManager implements ServerMessageHandler.GameMessageListen
      * This method translates the value of the card into a string
      */
     public String translateIntToCard(int cardValue) {
-        int cardNumber = (int) Math.ceil(cardValue/4) + 1;
+        int cardNumber = (int) Math.ceil(cardValue / 4) + 1;
         int suit = cardValue % 4;
 
 
@@ -130,7 +131,7 @@ public class ServerGameManager implements ServerMessageHandler.GameMessageListen
             stringSuit = "King of ";
         }
 
-        switch (suit){
+        switch (suit) {
             case 0:
                 stringSuit = stringSuit + "♠";
                 break;
@@ -149,9 +150,10 @@ public class ServerGameManager implements ServerMessageHandler.GameMessageListen
 
     /**
      * This method determines whether the game is over by determing if the deck is empty
+     *
      * @return true if game is over, else return false
      */
-    public Boolean determineGameOver(){
+    public Boolean determineGameOver() {
         if (playerCards.get(0).isEmpty()) { // check if deck is empty
             return true;
         }
@@ -172,8 +174,6 @@ public class ServerGameManager implements ServerMessageHandler.GameMessageListen
 
 
         System.out.println("drawn card " + drawnCards.get(players.indexOf(id)));
-
-
 
 
         String card = translateIntToCard(drawnCards.get(players.indexOf(id)));
@@ -205,46 +205,44 @@ public class ServerGameManager implements ServerMessageHandler.GameMessageListen
                 byte[] playersScore = Utilities.intToByteArray(playerScores.get(i));
                 byte[] pointsMessage = ServerLogic.Utilities.prepareMessage(ServerNetwork.CommunicationCodes.GAME_UPDATE_SCORE_PRIVATE, playersScore);
                 networkManager.send(players.get(i), pointsMessage);
-            }
 
+                // updates other players' scores on each client
+                for (int j = 0; j < players.size(); j++) {
 
-            // updates other players' scores on each client
-            for (int j = 0; j < players.size(); j++) {
+                    otherPlayersScores.clear();
+                    otherPlayersScores.addAll(playerScores);
+                    //System.out.println("otherPlayersScores size BEFORE: " + otherPlayersScores.size());
+                    if (players.get(i) != players.get(j)) {
+                        //otherPlayersScores.remove(players.get(i));
 
-                otherPlayersScores.clear();
-                otherPlayersScores.addAll(playerScores);
-                //System.out.println("otherPlayersScores size BEFORE: " + otherPlayersScores.size());
-                if (players.get(i) != players.get(j)) {
-                    //otherPlayersScores.remove(players.get(i));
-
-                    //System.out.println("otherPlayersScores size AFTER: " + otherPlayersScores.size());
-                    for (int k = 0; k < otherPlayersScores.size(); k++) {
-                        if ((k == 0) && (players.get(j) == players.get(k))){
-                            byte[] p1ScoreMessage = ClientLogic.Utilities.prepareOperationMessage(ClientNetwork.CommunicationCodes.GAME_UPDATE_SCORE_PLAYER_1, otherPlayersScores.get(k));
-                            networkManager.send(players.get(i), p1ScoreMessage);
-                        }
-                        if ((k == 1) && (players.get(j) == players.get(k))) {
-                            byte[] p2ScoreMessage = ClientLogic.Utilities.prepareOperationMessage(ClientNetwork.CommunicationCodes.GAME_UPDATE_SCORE_PLAYER_2, otherPlayersScores.get(k));
-                            networkManager.send(players.get(i), p2ScoreMessage);
-                        }
-                        if ((k == 2) && (players.get(j) == players.get(k))) {
-                            byte[] p3ScoreMessage = ClientLogic.Utilities.prepareOperationMessage(ClientNetwork.CommunicationCodes.GAME_UPDATE_SCORE_PLAYER_3, otherPlayersScores.get(k));
-                            networkManager.send(players.get(i), p3ScoreMessage);
+                        //System.out.println("otherPlayersScores size AFTER: " + otherPlayersScores.size());
+                        for (int k = 0; k < otherPlayersScores.size(); k++) {
+                            byte[] otherPlayersScore = Utilities.intToByteArray(otherPlayersScores.get(k));
+                            if ((k == 0) && (players.get(j) == players.get(k))) {
+                                byte[] p1ScoreMessage = ServerLogic.Utilities.prepareMessage(ServerNetwork.CommunicationCodes.GAME_UPDATE_SCORE_PLAYER_1, otherPlayersScore);
+                                networkManager.send(players.get(i), p1ScoreMessage);
+                            }
+                            if ((k == 1) && (players.get(j) == players.get(k))) {
+                                byte[] p2ScoreMessage = ServerLogic.Utilities.prepareMessage(ServerNetwork.CommunicationCodes.GAME_UPDATE_SCORE_PLAYER_2, otherPlayersScore);
+                                networkManager.send(players.get(i), p2ScoreMessage);
+                            }
+                            if ((k == 2) && (players.get(j) == players.get(k))) {
+                                byte[] p3ScoreMessage = ServerLogic.Utilities.prepareMessage(ServerNetwork.CommunicationCodes.GAME_UPDATE_SCORE_PLAYER_3, otherPlayersScore);
+                                networkManager.send(players.get(i), p3ScoreMessage);
+                            }
                         }
                     }
+                }
+            }
 
             if (determineGameOver()) endGame(winningPlayerID);
 
             // update points here who won, send to all players
             updateRound();
-
         }
-        // Draw card and broadcast result to everyone, check if game is done
-
-
-        // Draw card and broadcast result to everyone, check if game is done
 
     }
+
 
 
     /**

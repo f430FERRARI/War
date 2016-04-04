@@ -1,6 +1,5 @@
 package GUI;
 
-import ClientLogic.Client;
 import ClientLogic.ClientGameLogic;
 
 import javax.swing.*;
@@ -19,6 +18,10 @@ public class GameForm {
     private JLabel winnerLabel;
     private Chat chatPanel;
     private JLabel myCardLabel;
+    private JLabel player1Points;
+    private JLabel player2Points;
+    private JLabel player3Points;
+    private JLabel myPointsLabel;
     private JLabel warLabel;
 
     private GameFormListener gameFormListener;
@@ -53,6 +56,22 @@ public class GameForm {
 
     private void createUIComponents() {
         // TODO: place custom component creation code here
+    }
+
+    public void setMyPointsLabel(String text) {
+        myPointsLabel.setText(text);
+    }
+
+    public void setPlayer1PointsLabel(String text) {
+        player1Points.setText(text);
+    }
+
+    public void setPlayer2PointsLabel(String text) {
+        player2Points.setText(text);
+    }
+
+    public void setPlayer3PointsLabel(String text) {
+        player3Points.setText(text);
     }
 
     public void setWinnerLabel(String text){
